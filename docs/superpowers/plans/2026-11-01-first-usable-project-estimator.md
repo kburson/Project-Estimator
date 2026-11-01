@@ -52,7 +52,7 @@ Before Task 1 calculation implementation, obtain the owner's populated single-re
 | Area | Files and responsibility |
 | --- | --- |
 | Workspace | `package.json`, `package-lock.json`, `.nvmrc`, `.gitignore`, `tsconfig.base.json`, `vitest.config.ts`: pinned workspace, checks and explicit source/test roots. |
-| Portable domain | `packages/domain/src/{contracts,recipe,geometry,pricing,estimate,quotes,proposal,canonical}.ts`, `packages/domain/src/index.ts`: schemas and pure calculations. `packages/domain/src/contracts.ts` owns every serialized model below. |
+| Portable domain | `packages/domain/src/{contracts,recipe,geometry,pricing,estimate,quotes,proposal,canonical}.ts`, `packages/domain/src/index.ts`: schemas and pure calculations. `packages/domain/src/contracts.ts` owns domain schemas; `packages/exchange/src/contracts.ts` owns transport/recovery schemas introduced by its tasks. |
 | Test fixtures | `packages/domain/test/fixtures.ts`: synthetic populated recipe, catalog, customers, jobs and deterministic identifiers/times; `packages/domain/test/*.test.ts`: domain behavior. Nothing in this directory is copied to app catalog data. |
 | Portable package workflow | `packages/exchange/src/{contracts,catalog,field-package,import-plan}.ts`, `packages/exchange/src/index.ts`: validation, module/package construction and reviewed import plans; no Node/browser storage. |
 | Office | `apps/office/src/server/{database,catalog-store,job-store,quote-service,publish-service,import-service,backup-service,http}.ts`; `apps/office/src/ui/{App,Catalog,Setup,JobEditor,Estimate,Proposal,Publishing,Imports,Backup}.tsx`; `apps/office/src/platform/{crypto,files,pdf}.ts`: local service/UI and adapters. |
@@ -74,12 +74,12 @@ export type Money = string;
 export type Run = { id: string; label: string; lengthU16: number;
   startConnectionId: string; endConnectionId: string; notes: string };
 export type MaterialRule = { id: string; componentId: string; segment: SegmentId;
-  basis: 'post' | 'bay' | 'run-coverage'; countPerBasis: string;
+  basis: 'post' | 'bay' | 'run-coverage'; countPerBasis: string; purchaseUnit: string;
   coverageU16: number | null;
   cut: null | { length: 'bay' | 'fixed'; fixedU16: number | null; stockU16: number };
   wasteFraction: string };
 export type AttachmentRule = { id: string; componentId: string;
-  segment: SegmentId; materialRuleId: string; unitsPerInstalledPiece: string };
+  segment: SegmentId; materialRuleId: string; unitsPerInstalledPiece: string; purchaseUnit: string };
 export type LaborRule = { id: string; segment: SegmentId;
   driver: { kind: 'material-rule'; ruleId: string } | { kind: 'run-foot' };
   personHoursPerUnit: string };
@@ -90,7 +90,7 @@ export type Recipe = { id: string; version: string; name: string;
   attachments: AttachmentRule[]; labor: LaborRule[];
   cutRule: 'no-offcut-reuse'; assumptions: string[]; exclusions: string[] };
 export type Requirement = { id: string; componentId: string; segment: SegmentId;
-  installedUnits: string; requiredPurchaseUnits: string;
+  installedUnits: string; requiredPurchaseUnits: string; purchaseUnit: string; stockU16: number | null;
   cuts: { runId: string; bayIndex: number | null; lengthU16: number }[];
   unusedStockU16: number; sourceRuleId: string };
 export type Issue = { code: string; path: string; message: string };
@@ -98,7 +98,7 @@ export type GeometryResult = { bays: { runId: string; lengthsU16: number[] }[];
   postCount: number; requirements: Requirement[]; issues: Issue[] };
 ```
 
-A material `post` basis uses unique post identities; a `bay` basis retains each bay and cut; `run-coverage` uses `ceil(run.lengthU16 / coverageU16)` per run, never all-run averaging. Waste is additional purchased quantity, not installed quantity. A cut purchases one stock unit per piece with no reuse; reject a cut longer than its stock. Non-cut items use declared units. Attachment counts derive from installed pieces of their referenced rule, never purchased spare stock. Shared endpoint post requirements are allocated once across incident runs by sorted run ID; differing supports are unsupported by the single-recipe trial. The owner must validate that this deliberately small recipe vocabulary represents the chosen recipe; do not expand it into an arbitrary formula language.
+A material `post` basis uses unique post identities; a `bay` basis retains each bay and cut; `run-coverage` uses `ceil(run.lengthU16 / coverageU16)` per run, never all-run averaging. Waste is additional purchased quantity, not installed quantity. Rule units must match their component/offer units; the trial does not guess unit conversions. Non-cut requirements have `stockU16:null`; cut requirements copy the configured stock length. A cut purchases one stock unit per piece with no reuse; reject a cut longer than its stock. Non-cut items use declared units. Attachment counts derive from installed pieces of their referenced rule, never purchased spare stock. Shared endpoint post requirements are allocated once across incident runs by sorted run ID; differing supports are unsupported by the single-recipe trial. The owner must validate that this deliberately small recipe vocabulary represents the chosen recipe; do not expand it into an arbitrary formula language.
 
 ## Task 1: Shared workspace and owner-validated geometry
 
@@ -110,8 +110,9 @@ A material `post` basis uses unique post identities; a `bay` basis retains each 
 
   Establish private root workspaces `apps/*` and `packages/*`, ESM, strict TypeScript, and create `@estimator/domain` now; reserve `@estimator/exchange`, `@estimator/office`, `@estimator/field` for their owning tasks. Root `test` is `vitest run`; `typecheck` runs `tsc --noEmit` for each workspace; `verify` runs typecheck, tests and both app builds through a small Node script that stops on the first failure. Configure Vitest `include` as `packages/**/*.test.ts` and `apps/**/*.test.ts`; exclude `probes/**`, `dist/**` and `.local/**`. `.gitignore` adds `node_modules/`, `.local/`, `dist/`, `.expo/`, coverage and SQLite sidecar files without hiding source fixtures.
 
+Root `package.json` (dependency pins are below):
+
 ```json
-// Root package.json: establish these keys; dependency pins are below.
 {
   "name": "project-estimator", "private": true, "type": "module",
   "workspaces": ["apps/*", "packages/*"],
@@ -210,7 +211,8 @@ export type Offer = { id: string; vendorId: string; componentId: string; sku: st
 export type OfferChoice = { componentId: string; offerId: string; arrangementId: string | null };
 export type Purchase = { offerId: string; observationId: string; arrangementId: string;
   purchasedUnits: string; packages: number; unitPrice: Money;
-  preTaxCost: Money; purchaseTax: Money; cost: Money;
+  observedCost: Money; addedPurchaseTax: Money; cost: Money;
+  installedUnits: string; allowanceUnits: string; unusedPurchasedUnits: string; unusedStockU16: number | null;
   allocations: { requirementId: string; segment: SegmentId; cost: Money }[] };
 export type PurchaseResult = { purchases: Purchase[]; issues: Issue[] };
 export type BusinessSettings = { confirmedAt: string | null; laborCostPerPersonHour: Money | null;
@@ -222,9 +224,9 @@ export type PricingModule = { schema: 1; businessId: string; version: string;
   defaultOffers: { componentId: string; offerId: string }[]; settings: BusinessSettings };
 ```
 
-`unitPrice` means per declared purchase unit, not per pack; the UI always labels that unit. A pack quantity of 10 and a requirement of 11 units means 2 packs/20 purchased units. An observation may omit tiers; unknown is `null`/absent, never fabricated `"0.00"`. An explicitly entered free item may be `"0.00"` with evidence. `arrangements` is the complete allowlist of permitted base-plus-discount combinations: no implicit stacking, and a discount must name the base it actually discounts. Corrected observations stay in history but are excluded from current selection by `correctsId`. Publishing selects the observation explicitly; it does not guess “latest” from an unknown source date.
+`unitPrice` means per declared purchase unit, not per pack; the UI always labels that unit. A pack quantity of 10 and a requirement of 11 units means 2 packs/20 purchased units. An observation may omit tiers; unknown is `null`/absent, never fabricated `"0.00"`. An explicitly entered free item may be `"0.00"` with evidence. `arrangements` is the complete allowlist of permitted base-plus-discount combinations: no implicit stacking, and a discount must name the base it actually discounts. Corrected observations stay in history but are excluded from current selection by `correctsId`. Publishing selects the observation explicitly; it does not guess “latest” from an unknown source date. A pricing module has exactly one selected observation per included offer; duplicate/missing offer-observation bindings are invalid. Once referenced by an observation or recipe/release, an offer/component identity and its unit/pack/stock/specification/branch/currency/rental context are immutable. Editing that context creates a new ID, with an explicit replacement link in office metadata; old IDs remain resolvable and cannot be deleted. `saveCatalog` merges active selections without replacing historical identities. Receipt observations remain receipt evidence unless the owner explicitly creates a new reusable price observation. Unit prices may carry up to six decimal places; multiply first and round purchase/segment totals to cents. `observedCost` is the rounded amount at the entered price basis; `addedPurchaseTax` is zero for tax-included prices, not a claim that their included tax was zero.
 
-- [ ] **Step 1: Add test fixtures and failing selection tests.** Extend `fixtures.ts` with `syntheticPricing()` containing one 10-unit pack offer, retail `$10/unit`, bulk `$8/unit` at 20 purchased units, a contractor quote `$9/unit`, and contractor 10% off retail only. Give each arrangement a distinct ID and permit no bulk-plus-discount arrangement. Add `syntheticRequirement(segment, units)` and use decimal strings throughout.
+- [ ] **Step 1: Add test fixtures and failing selection tests.** Extend `fixtures.ts` with `syntheticPricing()` containing one 10-unit pack offer, retail `$10/unit`, bulk `$8/unit` at 20 purchased units, a contractor quote `$9/unit`, and contractor 10% off retail only. Give each arrangement a distinct ID and permit no bulk-plus-discount arrangement. Add `syntheticRequirement(segment: SegmentId, units: string): Requirement`, using the same synthetic component as the pricing fixture, purchaseUnit `each`, no cuts/stock, no waste, and stable IDs ordered posts before rails; use decimal strings throughout.
 
 ```ts
 import { expect, it } from 'vitest';
@@ -271,11 +273,40 @@ const totalCents = totalCost.mul(100).toDecimalPlaces(0, Decimal.ROUND_HALF_UP);
 const shares = requirements.map(r => ({ id: r.id, segment: r.segment,
   exact: totalCents.mul(r.installedUnits).div(installedTotal) }));
 const rounded = shares.map(s => ({ ...s, cents: s.exact.floor() }));
-// Allocate remaining cents by descending fractional remainder, then stable ID.
-// Return allocations sorted by requirement ID; their integer-cent sum equals totalCents.
+const order = [...rounded].sort((a, b) =>
+  b.exact.minus(b.cents).comparedTo(a.exact.minus(a.cents)) || a.id.localeCompare(b.id));
+const remaining = totalCents.minus(rounded.reduce((sum, row) => sum.plus(row.cents), new Decimal(0))).toNumber();
+for (let i = 0; i < remaining; i++) order[i].cents = order[i].cents.plus(1);
+const allocations = rounded.sort((a, b) => a.id.localeCompare(b.id)).map(row => ({
+  requirementId: row.id, segment: row.segment, cost: row.cents.div(100).toFixed(2)
+}));
 ```
 
-  Implement that remainder loop explicitly, with a zero-total/zero-weight guard. Add tests for fractional required units around a bulk boundary, explicit non-cheapest tier, invalid discount bases, tax-included versus excluded observations, missing purchase tax, unchanged default vendor despite cheaper other offers, and day/week rental mismatch. `observedAt:null` remains null after append/correction.
+  Guard zero total/zero installed weight before that loop. Preserve the calculated per-unit price precision in `Purchase.unitPrice`; only extended monetary totals/allocations are two-decimal strings. `allowanceUnits` is required purchase units minus installed pieces; `unusedPurchasedUnits` is purchased pieces minus installed pieces (including pack spares). For cut items `unusedStockU16` equals purchased stock length minus the sum of installed cuts, including waste/pack spare stocks; reject inconsistent stock/unit context within a pool. Add tests for fractional required units around a bulk boundary, explicit non-cheapest tier, invalid discount bases, tax-included versus excluded observations, missing purchase tax, unchanged default vendor despite cheaper other offers, and day/week rental mismatch. `observedAt:null` remains null after append/correction.
+  Add these concrete cases to `pricing.test.ts`:
+
+```ts
+it('retains fractional unit cost until extending the purchase', () => {
+  const pricing = syntheticPricing();
+  pricing.offers[0].packageQuantity = '1000';
+  pricing.observations[0].tiers = [{id: 'retail', kind: 'retail', unitPrice: '0.0125',
+    discountFraction: null, basisTierId: null, minPurchasedUnits: null, maxPurchasedUnits: null}];
+  pricing.observations[0].arrangements = [{id: 'retail', baseTierId: 'retail', discountTierIds: []}];
+  const purchase = selectPurchases([syntheticRequirement('posts', '1000')], pricing, []).purchases[0];
+  expect(purchase.unitPrice).toBe('0.0125');
+  expect(purchase.cost).toBe('12.50');
+});
+it('reports unused whole pack stock as well as cut offcuts', () => {
+  const pricing = syntheticPricing(); pricing.offers[0].packageQuantity = '2';
+  const requirement = {...syntheticRequirement('rails', '1'), stockU16: 1536,
+    cuts: [{runId: id(40), bayIndex: 0, lengthU16: 384}]};
+  const purchase = selectPurchases([requirement], pricing, []).purchases[0];
+  expect(purchase.unusedPurchasedUnits).toBe('1');
+  expect(purchase.unusedStockU16).toBe(2688); // 16 ft purchased minus 2 ft installed
+});
+```
+
+  Import `id` from the fixture module. Add a requirement-unit `day` versus offer-unit `week` test that returns `UNIT_MISMATCH` before pricing.
 - [ ] **Step 4: Run green.** `npm test -- packages/domain/test/pricing.test.ts packages/domain/test/geometry.test.ts` and `npm run typecheck`.
 - [ ] **Step 5: Commit.** `git add packages/domain` then `git commit -m "feat: preserve price history and select pooled purchase tiers"`.
 
@@ -283,7 +314,7 @@ const rounded = shares.map(s => ({ ...s, cents: s.exact.floor() }));
 
 **Files:** Create `packages/domain/src/estimate.ts`, `packages/domain/test/estimate.test.ts`; modify domain contracts/index/fixtures.
 
-**Interfaces:** Consumes Tasks 1–2. Produces `calculateEstimate(input: EstimateInput): EstimateResult`; `priceSegment(input: SegmentPriceInput): SegmentResult`; `assertTrialReady(recipe: Recipe, pricing: PricingModule): Issue[]`. `assertTrialReady` rejects test-only/unvalidated recipes and unconfirmed/null business settings; explicit zero values remain valid.
+**Interfaces:** Consumes Tasks 1–2. Produces `CALCULATOR_VERSION = '1.0.0'`, `calculateEstimate(input: EstimateInput): EstimateResult`; `priceSegment(input: SegmentPriceInput): SegmentResult`; `assertTrialReady(recipe: Recipe, pricing: PricingModule): Issue[]`. `assertTrialReady` rejects test-only/unvalidated recipes and unconfirmed/null business settings; explicit zero values remain valid.
 
 ```ts
 export type ManualItem = { id: string; description: string; segment: SegmentId;
@@ -312,11 +343,12 @@ export type EstimateResult = { schema: 1; calculatorVersion: string;
 
 Manual material tax is added only when excluded; a missing excluded rate is incomplete. Manual labor costs never invent hours; `null` distinguishes unknown hours from zero. Rentals retain their explicit billing unit. Manual gate allowance UI requires both confirmations; the engine never subtracts an opening or inserts support posts. Missing automatic recipe inputs remain issues even with an allowance. Incomplete results can show known line costs but the UI must not label their subtotal a valid quote or permit a freeze.
 
-- [ ] **Step 1: Write failing money/allowance tests.** Extend fixtures with `syntheticEstimateInput()` using the earlier populated fixture objects, and `syntheticManualItem()` with explicit test costs/tax flags.
+- [ ] **Step 1: Write failing money/allowance tests.** Extend fixtures with `syntheticEstimateInput()` using the earlier populated recipe, a complete per-component pricing fixture (one corresponding offer/observation/default choice for every material/attachment component, explicit zero purchase/customer tax and synthetic labor/markup settings), and `syntheticManualItem()` with explicit test costs/tax flags.
 
 ```ts
 import { expect, it } from 'vitest';
 import { calculateEstimate, priceSegment } from '../src/index.ts';
+import Decimal from 'decimal.js';
 import { syntheticEstimateInput, syntheticManualItem } from './fixtures.ts';
 
 it('taxes the final selling override, without splitting material and labor', () => {
@@ -340,7 +372,7 @@ it.each([[true, '110.00'], [false, '121.00']])('manual purchase tax included=%s'
     purchaseTaxIncluded: included, purchaseTaxFraction: '0.10' }];
   const withItem = calculateEstimate(input);
   const without = calculateEstimate({ ...input, manualItems: [] });
-  expect(Number(withItem.cost) - Number(without.cost)).toBe(Number(cost));
+  expect(new Decimal(withItem.cost).minus(without.cost).toFixed(2)).toBe(cost);
 });
 it('a manual gate does not repair an incomplete automatic recipe', () => {
   const input = syntheticEstimateInput();
@@ -352,7 +384,7 @@ it('a manual gate does not repair an incomplete automatic recipe', () => {
 ```
 
 - [ ] **Step 2: Run red.** `npm test -- packages/domain/test/estimate.test.ts`.
-- [ ] **Step 3: Implement pure composition and pricing.** Geometry feeds pooled purchases; allocations feed only their consuming segments; acquisition gets its own sourcing/delivery labor/fees, never the material purchase again. Recipe labor is person-hours times the explicitly configured hourly cost. Add manual cost rows to their selected segment, then price applicable segments once. Use Decimal everywhere; the `Number` conversions above are fixture assertions only.
+- [ ] **Step 3: Implement pure composition and pricing.** Geometry feeds pooled purchases; allocations feed only their consuming segments; acquisition gets its own sourcing/delivery labor/fees, never the material purchase again. Recipe labor is person-hours times the explicitly configured hourly cost. Add manual cost rows to their selected segment, then price applicable segments once. Use Decimal for both arithmetic and currency assertions. Resolve `input.jobMarkupFraction ?? input.pricing.settings.defaultMarkupFraction` before segment pricing; if both are missing, report an issue.
 
 ```ts
 const markup = input.adjustment?.markupFraction ?? input.jobMarkupFraction;
@@ -365,15 +397,15 @@ const customerTax = input.taxable
   : new Decimal(0);
 ```
 
-  Return internal profit/below-cost flags and `effectiveMarkupFraction:null` for zero cost. Totals sum rounded segment amounts. Add tests that purchases are counted once, penny allocations sum exactly, direct override zero is respected, missing versus intentionally zero settings differ, manual labor contributes no made-up hours, invalid manual gate confirmations block save/freeze, and purchase tax is not re-marked-up after customer tax. Add assertion that all serialized monetary outputs are fixed two-decimal strings.
+  Return internal profit/below-cost flags and `effectiveMarkupFraction:null` for zero cost. Totals sum rounded segment amounts. Add tests that purchases are counted once, penny allocations sum exactly, direct override zero is respected, missing versus intentionally zero settings differ, manual labor contributes no made-up hours, invalid manual gate confirmations block save/freeze, and purchase tax is not re-marked-up after customer tax. Assert extended monetary totals/allocations are fixed two-decimal strings while per-unit input/selected prices retain necessary precision. Add a test with `jobMarkupFraction:null`, business default `0.20` and no segment adjustment: a `$100.00` segment sells at `$120.00`; a missing business default yields incompleteness.
 - [ ] **Step 4: Run green.** `npm test -- packages/domain/test` and `npm run typecheck`.
 - [ ] **Step 5: Commit.** `git add packages/domain` then `git commit -m "feat: calculate segment quotes and manual work allowances"`.
 
 ## Task 4: Useful Mac catalog, customer/job editor and durable drafts
 
-**Files:** Create `apps/office/{package.json,tsconfig.json,index.html,vite.config.ts}`, `apps/office/scripts/dev.mjs`; office server `database.ts`, `catalog-store.ts`, `job-store.ts`, `http.ts`; UI `App.tsx`, `Catalog.tsx`, `Setup.tsx`, `JobEditor.tsx`, `Estimate.tsx`, `main.tsx`, `styles.css`; `apps/office/test/{database,job-save,http}.test.ts`; modify domain contracts/fixtures and create `packages/domain/src/canonical.ts`; create `apps/office/src/server/attachments.ts` and `apps/office/test/attachments.test.ts`; create `docs/trial/setup.md` and `docs/trial/quote-workflow.md`.
+**Files:** Create `apps/office/{package.json,tsconfig.json,index.html,vite.config.ts}`, `apps/office/scripts/dev.mjs`; office server `database.ts`, `catalog-store.ts`, `job-store.ts`, `http.ts`; UI `App.tsx`, `Catalog.tsx`, `Setup.tsx`, `JobEditor.tsx`, `Estimate.tsx`, `main.tsx`, `styles.css`; `apps/office/test/{database,job-save,http}.test.ts`; modify domain contracts/fixtures and create `packages/domain/src/canonical.ts`; create `apps/office/src/server/calculation.ts` and `apps/office/test/fixtures.ts`; create `apps/office/src/server/attachments.ts` and `apps/office/test/attachments.test.ts`; create `docs/trial/setup.md` and `docs/trial/quote-workflow.md`.
 
-**Interfaces:** `openOfficeStore(rootDir: string): OfficeStore` owns `DatabaseSync` and file paths; `OfficeStore.close(): void`. Store methods: `appendPrice(observation: PriceObservation): void`; `saveCatalog(input: {vendors: Vendor[]; components: Component[]; offers: Offer[]; recipe: Recipe; pricing: PricingModule}): void`; `loadCatalog():` that same shape; `saveCustomer(customer: Customer): void`; `saveDraft(draft: JobDraft, expectedRevision: number | null): JobDraft`; `getDraft(id: string): JobDraft | null`; `listJobs(): JobDraft[]`. Revisions are optimistic integers. `saveDraft` increments only after a successful transaction; a conflict returns a named error and the existing revision. Neither opening a draft nor refreshing a catalog recalculates it.
+**Interfaces:** `openOfficeStore(rootDir: string): OfficeStore` owns `DatabaseSync` and file paths; `OfficeStore.close(): void`. Store methods: `appendPrice(observation: PriceObservation): void`; `saveCatalog(input: {vendors: Vendor[]; components: Component[]; offers: Offer[]; recipe: Recipe; pricing: PricingModule}): void`; `loadCatalog():` that same shape; `saveCustomer(customer: Customer): void`; `saveDraft(draft: JobDraft, expectedRevision: number | null): JobDraft`; `getDraft(id: string): JobDraft | null`; `listJobs(): JobDraft[]`. `apps/office/src/server/calculation.ts` exports `calculateOfficeDraft(draft: JobDraft): JobDraft`, invoking only shared `calculateEstimate` and refreshing `calculatedInputCanonical`. Revisions are optimistic integers. `saveDraft` increments only after a successful transaction; a conflict returns a named error and the existing revision. Neither opening a draft nor refreshing a catalog recalculates it.
 
 ```ts
 // Add schemas/types to domain contracts.ts.
@@ -387,9 +419,9 @@ export type JobDraft = { id: string; customerId: string; customerSnapshot: Custo
   source: { deviceId: string | null; businessId: string; officeBaseRevision: number | null } };
 ```
 
-Draft input/result are self-contained JSON. The UI creates a new calculation only after explicit Calculate/Reprice; a changed input makes the displayed result visibly stale until Calculate succeeds. Saving edits persists the input plus the last result and a derived “needs calculation” flag (fingerprint comparison introduced in Task 5); a quote freeze requires a matching current input/result. Existing quotes are never touched by draft saves. The `calculatedInputCanonical` field in `JobDraft` is populated by a stable sorted-key serializer added to `packages/domain/src/canonical.ts`; Task 5 adds hashing for durable identity.
+Draft input/result are self-contained JSON. The UI creates a new calculation only after explicit Calculate/Reprice; a changed input makes the displayed result visibly stale until Calculate succeeds. Saving edits persists the input plus the last result and a derived “needs calculation” flag (fingerprint comparison introduced in Task 5); a quote freeze requires a matching current input/result. Existing quotes are never touched by draft saves. At draft creation, copy recipe assumptions/exclusions into the explicit customer-facing input arrays for owner review; later recipe edits do not rewrite them. The `calculatedInputCanonical` field in `JobDraft` is populated by `canonicalJson(value: unknown): string`, a stable sorted-key serializer in `packages/domain/src/canonical.ts`; Task 5 adds hashing for durable identity.
 
-- [ ] **Step 1: Write SQLite transaction/revision tests.** Add `syntheticCustomer()` and `syntheticDraft()` fixtures; drafts include the canonical string of their calculation input. Use a unique OS temp directory per test and close the store in `afterEach`.
+- [ ] **Step 1: Write SQLite transaction/revision tests.** Add `syntheticCustomer()` and `syntheticDraft()` domain fixtures and `syntheticOfficeCatalog()` in `apps/office/test/fixtures.ts` returning the full catalog shape accepted by `saveCatalog` (one synthetic vendor plus components/offers/observations matching the complete estimate fixture); drafts include the canonical string of their calculation input. Use a unique OS temp directory per test and close the store in `afterEach`.
 
 ```ts
 import { afterEach, expect, it } from 'vitest';
@@ -398,6 +430,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { openOfficeStore } from '../src/server/database.ts';
 import { syntheticCustomer, syntheticDraft } from '../../../packages/domain/test/fixtures.ts';
+import { syntheticOfficeCatalog } from './fixtures.ts';
 const roots: string[] = [];
 const stores: ReturnType<typeof openOfficeStore>[] = [];
 afterEach(() => { stores.splice(0).forEach(s => s.close());
@@ -414,6 +447,7 @@ it('retains the saved revision on a conflicting write', () => {
 it('append-only observation storage refuses update/delete', () => {
   const root = mkdtempSync(join(tmpdir(), 'estimator-')); roots.push(root);
   const store = openOfficeStore(root); stores.push(store);
+  store.saveCatalog(syntheticOfficeCatalog());
   const observation = syntheticDraft().input.pricing.observations[0];
   store.appendPrice(observation);
   expect(() => store.appendPrice({...observation, evidence: 'overwrite'})).toThrow(/immutable/i);
@@ -428,39 +462,55 @@ CREATE TABLE jobs (
   id TEXT PRIMARY KEY, customer_id TEXT NOT NULL REFERENCES customers(id),
   revision INTEGER NOT NULL CHECK(revision > 0), body TEXT NOT NULL
 );
-CREATE TABLE price_observations (id TEXT PRIMARY KEY, offer_id TEXT NOT NULL, body TEXT NOT NULL);
+CREATE TABLE price_observations (id TEXT PRIMARY KEY, offer_id TEXT NOT NULL REFERENCES offers(id), body TEXT NOT NULL);
 CREATE TRIGGER price_observations_no_update BEFORE UPDATE ON price_observations
 BEGIN SELECT RAISE(ABORT, 'immutable observation'); END;
 CREATE TRIGGER price_observations_no_delete BEFORE DELETE ON price_observations
 BEGIN SELECT RAISE(ABORT, 'immutable observation'); END;
 ```
 
-  `http.ts` uses Node HTTP, a 5 MiB request limit and a small explicit route table; no framework/server account system. Bind `127.0.0.1` only. Development Vite proxies `/api`; production Node serves the built UI and API on the same origin. Reject mutation requests with a foreign `Origin` or non-JSON content type; reject unexpected Host values. Routes: GET/POST `/api/catalog`, POST `/api/prices`, GET/POST `/api/customers`, GET `/api/jobs`, GET/PUT `/api/jobs/:id`; later tasks add their routes. Return typed JSON errors without local paths/secrets. Test foreign-origin writes and body limits once; this is a local guard, not authentication infrastructure.
+  `http.ts` uses Node HTTP, a 5 MiB JSON request limit and a small explicit route table; no framework/server account system. Bind `127.0.0.1` only. Development Vite proxies `/api`; production Node serves the built UI and API on the same origin. Reject mutation requests with a foreign/missing `Origin` or unexpected Host; accept JSON on JSON routes only. The single binary upload route described below accepts only `application/octet-stream` and has its own 20 MiB limit. Development allows exactly the configured loopback Vite origin through the proxy, not wildcard CORS. Routes: GET/POST `/api/catalog`, POST `/api/prices`, GET/POST `/api/customers`, GET `/api/jobs`, GET/PUT `/api/jobs/:id`; later tasks add their routes. Return typed JSON errors without local paths/secrets. Test foreign-origin writes and body limits once; this is a local guard, not authentication infrastructure.
 
-- [ ] **Step 4: Implement usable office forms and save feedback.** Catalog forms enter vendor/component/offer units and append dated prices/corrections; Setup requires explicit labor, markup, purchase/customer-tax decisions, selected default offers, business proposal text and office email. Show owner validation of one recipe, unavailable selections and named missing inputs. Customer/job forms cover contact/referral/history (last contact derived from dated entries), address, constraints, repeatable named runs and endpoint connections, manual items and gate checks. Estimate displays quantities/cuts/unused stock, packs/tiers/provenance, person-hours, segment cost/selling/tax and overrides with Clear. Only trial navigation is shown. A simple Attach file action retains owner-selected job/receipt evidence as immutable local files with original name, content hash, byte length and source date; render links, not a drawing library. `attachments.ts` owns `attachFile(ownerId: string, bytes: Uint8Array, metadata: {name: string; sourceDate: string|null}): AttachmentRecord`, with `AttachmentRecord` storing ID/owner/hash/relative path/name/date/size. Bound files to 20 MiB, reject path traversal, write verified files before the referencing transaction and remove unreferenced temp files on failure. Expose explicit local upload/download routes and test failed writes/references; never include attachments automatically in field JSON or CDN.
+- [ ] **Step 4: Implement usable office forms and save feedback.** Catalog forms enter vendor/component/offer units and append dated prices/corrections; Setup requires explicit labor, markup, purchase/customer-tax decisions, selected default offers, business proposal text and office email. Show owner validation of one recipe, unavailable selections and named missing inputs. Customer/job forms cover contact/referral/history (last contact derived from dated entries), address, constraints, repeatable named runs and endpoint connections, manual items and gate checks. Estimate displays quantities/cuts/unused stock, packs/tiers/provenance, person-hours, segment cost/selling/tax and overrides with Clear. Only trial navigation is shown. A simple Attach file action retains owner-selected job/receipt evidence as immutable local files with original name, content hash, byte length and source date; render links, not a drawing library. `attachments.ts` owns `attachFile(ownerId: string, bytes: Uint8Array, metadata: {name: string; sourceDate: string|null}): AttachmentRecord`, with `AttachmentRecord` storing ID/owner/hash/relative path/name/date/size. Bound files to 20 MiB, reject path traversal, write verified files before the referencing transaction and remove unreferenced temp files on failure. Use `POST /api/attachments?ownerId=<UUID>&name=<encoded-name>` for bounded binary bytes and `GET /api/attachments/:id` for download; source date is optional validated metadata. Test failed writes/references and both size/content-type boundaries; never include attachments automatically in field JSON or CDN.
 
 ```ts
 // UI save controller contract: persist before acknowledging.
 export async function persistDraft(
   draft: JobDraft,
   save: (draft: JobDraft) => Promise<JobDraft>,
-  setState: (state: 'saving' | 'saved' | 'unsaved') => void
+  setState: (state: 'saving' | 'saved' | 'unsaved') => void,
+  isCurrentEdit: () => boolean
 ): Promise<JobDraft> {
   setState('saving');
-  try { const durable = await save(draft); setState('saved'); return durable; }
+  try { const durable = await save(draft); setState(isCurrentEdit() ? 'saved' : 'unsaved'); return durable; }
   catch (error) { setState('unsaved'); throw error; }
 }
 ```
 
-  Define `persistDraft` in `apps/office/src/ui/JobEditor.tsx`; test its rejected-promise path in `job-save.test.ts`. Debounce edits briefly, retain visible unsaved/error status and provide Retry. Disable presenting while saving/dirty/incomplete. Reprice is an explicit button with before/after purchase/tier/selling totals shown before saving the repriced draft. Zero-rate fields require deliberate owner entry; blank is not zero.
+  Define `persistDraft` in `apps/office/src/ui/JobEditor.tsx`; test its rejected-promise path in `job-save.test.ts`. Debounce edits briefly, serialize writes per job and capture an edit-generation token for each write. A response advances the durable revision but must not replace newer in-memory input or show Saved unless its token is current. Queue the latest edit after it with the newly returned revision. Test an edit arriving during a pending save, followed by a successful latest save and by a rejected latest save. Retain visible unsaved/error status and provide Retry. Disable presenting while saving/dirty/incomplete. Reprice is an explicit button with before/after purchase/tier/selling totals shown before saving the repriced draft. Zero-rate fields require deliberate owner entry; blank is not zero.
+  In `database.test.ts`, prove history context cannot change:
+
+```ts
+it('preserves the pack/spec context of an old observation', () => {
+  const root = mkdtempSync(join(tmpdir(), 'estimator-')); roots.push(root);
+  const store = openOfficeStore(root); stores.push(store);
+  const catalog = syntheticOfficeCatalog(); store.saveCatalog(catalog);
+  store.appendPrice(catalog.pricing.observations[0]);
+  const changed = structuredClone(catalog); changed.offers[0].packageQuantity = '99';
+  expect(() => store.saveCatalog(changed)).toThrow(/immutable offer context/i);
+  expect(store.loadCatalog().offers[0].packageQuantity).toBe(catalog.offers[0].packageQuantity);
+});
+```
+
+  Implement immutable-context guards for offers/components and referenced recipe `(id,version)` pairs in the repository transaction; changing a referenced recipe creates a new version and requires renewed owner validation, while prior versions remain available. Test that a changed recipe body under the same referenced version is rejected; prevent removing referenced old identities, and have the UI create a new identity for economic changes. Price appends are idempotent for same ID/same body but reject same ID/different body, so a catalog selection save never duplicates history.
 - [ ] **Step 5: Run green and the Mac smoke workflow.** Run `npm test -- apps/office/test packages/domain/test`, `npm run typecheck`, `npm run build --workspace @estimator/office`. Start `npm run dev:office` and use the browser to enter a small test catalog/customer/job, connect 10/3/10-ft runs, calculate, override/clear, save, restart the service and reopen the exact result. Confirm a price-history edit leaves it unchanged. Record this in `docs/trial/quote-workflow.md`. Do not present synthetic data as a real quote.
 - [ ] **Step 6: Commit.** `git add apps/office packages/domain docs/trial/setup.md docs/trial/quote-workflow.md package.json package-lock.json` then `git commit -m "feat: add local Mac catalog and estimate workflow"`.
 
 ## Task 5: Immutable Preliminary/Issued quotes and allowlisted PDF
 
-**Files:** Create domain `quotes.ts`, `proposal.ts`; extend `canonical.ts`, contracts/index; tests `quotes.test.ts`, `proposal.test.ts`; office `server/quote-service.ts`, `platform/pdf.ts`, `ui/Proposal.tsx`, test `quote-service.test.ts`; modify job editor/store/HTTP/workflow doc. Create `packages/exchange/{package.json,tsconfig.json}`, `packages/exchange/src/proposal-pdf.ts` and `packages/domain/src/quote-service.ts` for portable freeze orchestration and `packages/domain/test/quote-service.test.ts`.
+**Files:** Create domain `quotes.ts`, `proposal.ts`; extend `canonical.ts`, contracts/index; tests `quotes.test.ts`, `proposal.test.ts`; office `server/quote-service.ts`, `platform/pdf.ts`, `ui/Proposal.tsx`, test `quote-service.test.ts`; modify job editor/store/HTTP/workflow doc. Create `packages/exchange/{package.json,tsconfig.json}`, `packages/exchange/src/{index,proposal-pdf}.ts`, `packages/exchange/test/proposal-pdf.test.ts`, `apps/office/src/platform/crypto.ts` (SHA-256 adapter) and `packages/domain/src/quote-service.ts` for portable freeze orchestration and `packages/domain/test/quote-service.test.ts`.
 
-**Interfaces:** `canonicalJson(value: unknown): string` recursively sorts object keys, preserves array order and rejects undefined/nonfinite numbers. Platform `sha256(bytes: Uint8Array): Promise<string>` returns lowercase hex. `quoteContent(draft: JobDraft, status: QuoteStatus): QuoteContent`; `toProposal(quote: FrozenQuote): ProposalModel`; `renderProposalPdf(proposal: ProposalModel): Promise<Uint8Array>` uses pdf-lib and no network fonts. `freezeQuote(draft: JobDraft, status: QuoteStatus, platform: 'office' | 'field', deps: FreezeDeps): Promise<FrozenQuote>` is shared orchestration. `FreezeDeps` has `mode: 'production' | 'synthetic-preview'`, `sha256`, `newId(): string`, `now(): string`, and `putIfAbsent(fingerprint: string, quote: FrozenQuote): Promise<FrozenQuote>`; the store enforces fingerprint uniqueness and returns the existing row for repeat actions.
+**Interfaces:** `canonicalJson(value: unknown): string` recursively sorts object keys, preserves array order and rejects undefined/nonfinite numbers. Platform `sha256(bytes: Uint8Array): Promise<string>` returns lowercase hex. `quoteContent(draft: JobDraft, status: QuoteStatus): QuoteContent`; `toProposal(quote: FrozenQuote): ProposalModel`; `renderProposalPdf(proposal: ProposalModel): Promise<Uint8Array>` uses pdf-lib and no network fonts. `freezeQuote(draft: JobDraft, status: QuoteStatus, platform: 'office' | 'field', deps: FreezeDeps): Promise<FrozenQuote>` is shared orchestration. `FreezeDeps` is a local dependency interface, never accepted from JSON/HTTP/URL/storage configuration. It has `mode: 'production' | 'synthetic-preview'`, `sha256`, `newId(): string`, `now(): string`, and `putIfAbsent(fingerprint: string, quote: FrozenQuote): Promise<FrozenQuote>`; the store enforces fingerprint uniqueness and returns the existing row for repeat actions.
 
 ```ts
 export type QuoteStatus = 'Preliminary' | 'Issued';
@@ -477,7 +527,7 @@ export type ProposalModel = { quoteId: string; status: QuoteStatus; frozenAt: st
 
 `quoteContent` reads `JobDraft.customerSnapshot`, populated when customer/job data is saved and copied into the freeze. Keep immutable snapshot display independent of current customer details/catalog. Include selected manual descriptions in proposal inclusions, with the allowance identified as such, but not their internal costs/source notes. No separately billed estimating/drafting fee.
 
-- [ ] **Step 1: Write snapshot and disclosure tests.** Add `syntheticFrozenQuote()` and `memoryFreezeDeps()` to fixtures; the latter uses a map, deterministic UUID/time and a real SHA-256 test adapter. Production hashing stays in platform adapters.
+- [ ] **Step 1: Write snapshot and disclosure tests.** Add `syntheticFrozenQuote()` and `memoryFreezeDeps()` to fixtures; the latter uses a map, a deterministic sequence of distinct UUIDs, a fixed time and a real SHA-256 test adapter. Production hashing stays in platform adapters; the office SHA-256 adapter is introduced in this task. Add explicit production-wrapper tests rejecting the same synthetic draft for both Preliminary and Issued, and assert that supplying a request field named `mode` is rejected by the strict request schema.
 
 ```ts
 import { expect, it } from 'vitest';
@@ -506,7 +556,7 @@ it('proposal exposes only the customer-safe schema', async () => {
 ```
 
 - [ ] **Step 2: Run red.** `npm test -- packages/domain/test/quotes.test.ts packages/domain/test/proposal.test.ts packages/domain/test/quote-service.test.ts apps/office/test/quote-service.test.ts`.
-- [ ] **Step 3: Implement content-addressed freeze and customer-only rendering.** Require current input to match `calculatedInputCanonical`, complete result, no pending save and field status Preliminary. Production mode requires `assertTrialReady`; synthetic-preview mode permits populated test-only fixtures with a prominent TEST ONLY presentation/PDF label and cannot be enabled in production builds. `memoryFreezeDeps` explicitly selects synthetic-preview; it does not change fixture validation to approved. Fingerprint the canonical `QuoteContent`, including status and customer-facing content, excluding generated ID/time and mutable draft revision/update time. Persist snapshot once transactionally before displaying, sharing or exporting it. A deliberate status change creates a new fingerprint. Office store `putQuoteIfAbsent` has a unique fingerprint index and immutable triggers; clicking twice returns the same stored ID. No UPDATE path exists for a frozen quote.
+- [ ] **Step 3: Implement content-addressed freeze and customer-only rendering.** Require current input to match `calculatedInputCanonical`, complete result, no pending save and field status Preliminary. Production mode requires `assertTrialReady` and `draft.result.calculatorVersion === CALCULATOR_VERSION` (exported by Task 3); synthetic-preview mode is injected only by Vitest test harnesses and permits populated test-only fixtures with a prominent TEST ONLY presentation/PDF label. Production office/field wrappers hard-code production mode and never read a mode from a request, URL, environment switch or saved record. Unit tests may simulate Issued in memory to test status identity, but no production path can issue a synthetic record. `memoryFreezeDeps` explicitly selects synthetic-preview; it does not change fixture validation to approved. Fingerprint the canonical `QuoteContent`, including status and customer-facing content, excluding generated ID/time and mutable draft revision/update time. Persist snapshot once transactionally before displaying, sharing or exporting it. A deliberate status change creates a new fingerprint. Office store `putQuoteIfAbsent` has a unique fingerprint index and immutable triggers; clicking twice returns the same stored ID. No UPDATE path exists for a frozen quote.
 
 ```ts
 export function toProposal(q: FrozenQuote): ProposalModel {
@@ -527,15 +577,15 @@ export function toProposal(q: FrozenQuote): ProposalModel {
 }
 ```
 
-  Replace raw segment IDs with fixed readable labels in the renderer; use that same allowlisted model in both customer screen and PDF. Validate `ProposalModel` at the PDF/view entrypoint, rejecting extra keys. Share `renderProposalPdf` as `packages/exchange/src/proposal-pdf.ts` (create exchange package here) so mobile reuses it; office `platform/pdf.ts` only writes/returns the bytes. Layout wrapped text and page breaks explicitly, repeating quote ID/status on each page; use bundled standard PDF fonts. PDF function accepts only `ProposalModel`, never a draft/quote/internal object.
+  Replace raw segment IDs with fixed readable labels in the renderer; use that same allowlisted model in both customer screen and PDF. Validate `ProposalModel` at the PDF/view entrypoint, rejecting extra keys. Share `renderProposalPdf` as `packages/exchange/src/proposal-pdf.ts` (create exchange package here) so mobile reuses it; office `platform/pdf.ts` only writes/returns the bytes. Layout wrapped text and page breaks explicitly, repeating quote ID/status on each page; use bundled standard PDF fonts. Before export, check every code point is supported by the selected font. An unsupported character produces a named export error with the offending field, leaves the frozen snapshot intact and never silently drops/substitutes text; the owner can revise text into a new snapshot. Test both long text and this recoverable failure. Do not fetch fonts at runtime. PDF function accepts only `ProposalModel`, never a draft/quote/internal object.
 - [ ] **Step 4: Run green and inspect actual output.** Add tests that repricing/changing the draft leaves old snapshot bytes unchanged; a failed quote transaction opens no presentation; a customer detail change creates a new snapshot; PDF bytes are nonempty and generated without fetch. Run the test command, typecheck and office build. Open a short and multi-page PDF with long scope/customer names; confirm wrapping, page breaks, readable totals and no internal costs/hours/markup. Record check in quote-workflow doc. Preliminary watermark/status and pricing date must remain on saved output after later issuing.
 - [ ] **Step 5: Commit.** `git add packages apps/office docs/trial/quote-workflow.md package-lock.json` then `git commit -m "feat: freeze customer quotes and export safe proposals"`.
 
 ## Task 6: Safe modular catalog staging, encryption and office enrollment QR
 
-**Files:** Create exchange `contracts.ts`, `catalog.ts`, `index.ts`, tests `catalog.test.ts`; office `server/publish-service.ts`, `platform/crypto.ts`, `platform/files.ts`, `ui/Publishing.tsx`, test `publishing.test.ts`; modify office HTTP/database; create `docs/trial/publishing.md`.
+**Files:** Create exchange `contracts.ts`, `catalog.ts`, tests `catalog.test.ts` and `test/fixtures.ts`; extend exchange `index.ts`; create office `server/publish-service.ts`; extend `platform/crypto.ts` with encryption; create `platform/files.ts`, `ui/Publishing.tsx`, test `publishing.test.ts`; modify office HTTP/database; create `docs/trial/publishing.md`.
 
-**Interfaces:** `buildCatalogRelease(input: CatalogBuildInput, crypto: CatalogCrypto, previous: CatalogArtifact[]): Promise<CatalogBuildResult>`; `validateManifest(value: unknown): Manifest`; `makeEnrollment(origin: string, businessId: string, key: CatalogKey): Enrollment`; `stagePublication(root: string, release: CatalogBuildResult): Promise<PublicationPreview>`. `CatalogCrypto` implements `sha256(bytes)`, `encrypt(key, iv, plaintext, additionalData)`, `randomBytes(count)`. Keys are 32 random bytes; AES-GCM uses a fresh random 12-byte IV per newly encrypted artifact and authenticated metadata. Never reuse an IV across new encryption. Reuse the **entire already generated ciphertext** only when plaintext hash, metadata and key ID are unchanged.
+**Interfaces:** `buildCatalogRelease(input: CatalogBuildInput, crypto: CatalogCrypto, previous: CatalogArtifact[]): Promise<CatalogBuildResult>`; `validateManifest(value: unknown): Manifest`; `makeEnrollment(origin: string, businessId: string, key: CatalogKey): Enrollment`; `catalogAdditionalData(businessId: string, module: Pick<ModuleRef,'id'|'version'|'schema'|'keyId'>): Uint8Array` encodes canonical UTF-8 metadata for both crypto adapters; `stagePublication(root: string, release: CatalogBuildResult, previousManifest: Manifest | null): Promise<PublicationPreview>`. `CatalogCrypto` declares `sha256(bytes: Uint8Array): Promise<string>`, `encrypt(key: CatalogKey, iv: Uint8Array, plaintext: Uint8Array, additionalData: Uint8Array): Promise<Uint8Array>` and `randomBytes(count: number): Uint8Array`. Keys are 32 random bytes; AES-GCM uses a fresh random 12-byte IV per newly encrypted artifact and authenticated metadata. Never reuse an IV across new encryption. Reuse the **entire already generated ciphertext** only when plaintext hash, metadata and key ID are unchanged.
 
 ```ts
 // Exchange contracts; keys appear only in local/enrollment contracts, never Manifest.
@@ -548,7 +598,7 @@ export type Manifest = { schema: 1; businessId: string; releaseId: string; publi
   minAppVersion: string; engineVersion: string; modules: ModuleRef[] };
 export type DesignModule = { schema: 1; version: string; recipe: Recipe; components: Component[] };
 export type CatalogArtifact = { ref: ModuleRef; body: Uint8Array };
-export type CatalogBuildInput = { manifest: Omit<Manifest, 'modules'>;
+export type CatalogBuildInput = { mode: 'production' | 'synthetic-preview'; manifest: Omit<Manifest, 'modules'>;
   pricing: PricingModule; design: DesignModule; key: CatalogKey };
 export type CatalogBuildResult = { manifest: Manifest; artifacts: CatalogArtifact[] };
 export type PublicationPreview = { stageDir: string; includedPaths: string[];
@@ -557,7 +607,7 @@ export type PublicationPreview = { stageDir: string; includedPaths: string[];
 
 For the trial encrypt **both** pricing and design; this is the simplest explicit default and avoids accidentally leaking rates embedded in design notes. No drawing/media library is introduced. Later intentionally public assets remain a schema extension, not required trial files. Pricing contains selected published offers, their selected observations/all permitted tiers, default-offer selection and business settings, not full vendor history. Design contains the one validated recipe and required component definitions. Validate cross-module component/offer/rule IDs and matching business/module versions before publishing. `Manifest.releaseId` identifies the aggregate catalog; `PricingModule.version` and `DesignModule.version` identify independently versioned module payloads. `EstimateInput.catalogReleaseId` preserves the exact aggregate used. A pricing-only change therefore does not edit design payload bytes.
 
-- [ ] **Step 1: Write release/encryption tests.** Add `syntheticCatalogBuild()` and Node Web Crypto test adapter fixtures in `packages/exchange/test/fixtures.ts`; test-only catalogs are allowed in test builds through an explicit `mode:'synthetic-preview'` argument added to `CatalogBuildInput`. Real `mode:'production'` calls `assertTrialReady`.
+- [ ] **Step 1: Write release/encryption tests.** Add `syntheticCatalogBuild()` and Node Web Crypto test adapter fixtures in `packages/exchange/test/fixtures.ts`; test fixtures explicitly set the declared `mode:'synthetic-preview'`. The office publish handler constructs `mode:'production'` itself and calls `assertTrialReady`; it never trusts an incoming mode. Add a handler test proving an incoming preview mode cannot publish a synthetic recipe. A developer fixture builder may create synthetic artifacts only in a clearly separate preview staging/data directory.
 
 ```ts
 import { expect, it } from 'vitest';
@@ -568,7 +618,8 @@ it('reuses identical encrypted artifacts and changes them on rotation', async ()
   const first = await buildCatalogRelease(input, crypto, []);
   const again = await buildCatalogRelease(input, crypto, first.artifacts);
   expect(again.artifacts).toEqual(first.artifacts);
-  const rotated = await buildCatalogRelease({...input, key: {
+  const rotated = await buildCatalogRelease({...input,
+    manifest: {...input.manifest, releaseId: 'catalog-rotated'}, key: {
     id: 'key-2', rawBase64: Buffer.alloc(32, 2).toString('base64') }}, crypto, first.artifacts);
   expect(rotated.artifacts[0].ref.sha256).not.toBe(first.artifacts[0].ref.sha256);
   expect(rotated.artifacts.every(a => a.ref.keyId === 'key-2')).toBe(true);
@@ -597,15 +648,15 @@ await writeJsonAtomically(join(stageDir, 'catalog/current.json'), result.manifes
 
   Define `writeVerifiedArtifacts` and `writeJsonAtomically` in office `platform/files.ts`, checking byte count/hash and writing temp-file+rename. Staging builds a fresh directory from explicit manifest refs and built app allowlist, not `cp -R` of data/root. `PublicationPreview` compares the previous current manifest's module paths with the new referenced set and lists superseded packs to remove from the **current** deployment only. Do not delete local archives/recovery keys or claim old deployment URLs/device copies are revoked. A Cloudflare Pages static upload of this exact staged directory is a later explicit owner Publish action; no Cloudflare API key is shipped to the PWA.
 
-  A module version changes only with that module's content; the aggregate manifest release ID is independent. Test that a design-only change leaves pricing ciphertext/URL unchanged and that draft inputs retain the aggregate release ID.
+  A module version changes only with that module's content; the aggregate manifest release ID is independent and changes when its module references/key change. A key-only rotation keeps plaintext module versions but creates new ciphertext identities and a new aggregate release. Reject reusing a published `(module ID, version)` for changed plaintext or a release ID for a different manifest; archived versions are immutable. Include this rejection test in `publishing.test.ts`. Test that a design-only change leaves pricing ciphertext/URL unchanged and that draft inputs retain the aggregate release ID.
 - [ ] **Step 4: Run green and inspect staging.** Add tests that missing referenced files prevent manifest installation, changing only pricing preserves design bytes, synthetic recipe blocks production, a malicious path/foreign URL is rejected and a staged directory contains neither SQLite/customer JSON/raw key/QR nor unencrypted pricing. Run tests/typecheck/office build. Document owner Publish, key-change preview, recovery-key backup and deployment removal limitations.
 - [ ] **Step 5: Commit.** `git add packages/exchange apps/office docs/trial/publishing.md package-lock.json` then `git commit -m "feat: stage encrypted modular catalogs and enrollment"`.
 
 ## Task 7: Offline field jobs and the same calculator/customer output
 
-**Files:** Create `apps/field/{package.json,tsconfig.json,app.json,App.tsx,metro.config.cjs}`; `apps/field/src/screens/{Jobs,Job,Designs,Updates,Outbox}.tsx`; field `store.ts`, `job-service.ts`, `platform/{crypto,files,pdf}.ts`; tests `store.test.ts`, `job-service.test.ts`; create `docs/trial/field-workflow.md`; modify workspace lockfile. Use a small screen state in `App.tsx`; Expo Router is not required.
+**Files:** Create `apps/field/{package.json,tsconfig.json,app.json,index.ts,App.tsx,metro.config.cjs}`; `apps/field/src/screens/{Jobs,Job,Designs,Updates,Outbox}.tsx`; field `store.ts`, `job-service.ts`, `platform/{crypto,files,pdf}.ts`; tests `store.test.ts`, `job-service.test.ts`; create `docs/trial/field-workflow.md`; modify workspace lockfile. Use a small screen state in `App.tsx`; Expo Router is not required.
 
-**Interfaces:** `openFieldStore(name: string): FieldStore` wraps Dexie. Methods `saveDraft(draft: JobDraft): Promise<void>`, `getDraft(id): Promise<JobDraft | undefined>`, `listDrafts(): Promise<JobDraft[]>`, `putQuoteIfAbsent(fingerprint, quote): Promise<FrozenQuote>`, `listQuotes(jobId): Promise<FrozenQuote[]>`, `close(): void`; later tasks add catalog/outbox tables/methods. `saveFieldDraft(draft: JobDraft, store: Pick<FieldStore,'saveDraft'>, report: (state: 'saving'|'saved'|'unsaved') => void): Promise<void>` persists before reporting saved; `calculateFieldDraft(draft): JobDraft` calls shared `calculateEstimate` and refreshes the canonical-input marker. `renderProposalPdf` is reused unchanged through the field file adapter.
+**Interfaces:** `openFieldStore(name: string): FieldStore` wraps Dexie. Methods `saveDraft(draft: JobDraft): Promise<void>`, `getDraft(id): Promise<JobDraft | undefined>`, `listDrafts(): Promise<JobDraft[]>`, `putQuoteIfAbsent(fingerprint, quote): Promise<FrozenQuote>`, `listQuotes(jobId): Promise<FrozenQuote[]>`, `close(): void`; later tasks add catalog/outbox tables/methods. `saveFieldDraft(draft: JobDraft, store: Pick<FieldStore,'saveDraft'>, report: (state: 'saving'|'saved'|'unsaved') => void): Promise<void>` persists before reporting saved; `calculateFieldDraft(draft: JobDraft): JobDraft` calls shared `calculateEstimate` and refreshes the canonical-input marker. `renderProposalPdf` is reused unchanged through the field file adapter.
 
 - [ ] **Step 1: Write durable-save tests using fake-indexeddb.** Dexie database names are unique per test; always delete test DBs. Fixtures are imported only by test files, not app bundles.
 
@@ -635,7 +686,7 @@ it('quota failure is unsaved and never acknowledged as saved', async () => {
 ```
 
 - [ ] **Step 2: Run red.** `npm test -- apps/field/test/store.test.ts apps/field/test/job-service.test.ts`.
-- [ ] **Step 3: Implement field storage and touch forms.** Dexie v1 tables: `drafts`, `quotes` (unique fingerprint), `outbox`, `enrollment`, `catalogModules`, `catalogState`, `preferences`. Keep job/quote/outbox JSON ordinary local records independent of catalog-key encryption; catalog ciphertext and enrollment keys have separate tables. Save draft edits transactionally with bounded debounce, explicit error/retry and before-navigation flush. Request `navigator.storage.persist()` when appropriate but report its actual result; never call it a backup or guarantee. Current app version must read v1 without destructive migration.
+- [ ] **Step 3: Implement field storage and touch forms.** Dexie v1 tables: `drafts`, `quotes` (unique fingerprint), `outbox`, `enrollment`, `catalogModules`, `catalogState`, `preferences`. Keep job/quote/outbox JSON ordinary local records independent of catalog-key encryption; catalog ciphertext and enrollment keys have separate tables. Save draft edits transactionally with bounded debounce, explicit error/retry and before-navigation flush. Reuse Task 4's per-job write queue/edit-generation rule: the reporting callback passed to `saveFieldDraft` captures the generation and cannot acknowledge a newer edit as Saved; a saved older input cannot overwrite a newer queued write. Add the same edit-during-save success/failure cases to field `job-service.test.ts`. Request `navigator.storage.persist()` when appropriate but report its actual result; never call it a backup or guarantee. Current app version must read v1 without destructive migration.
 
 ```ts
 this.version(1).stores({
@@ -645,19 +696,19 @@ this.version(1).stores({
 });
 ```
 
-  Use Expo `AppEntry`, `getDefaultConfig` from `expo/metro-config`, `web.output:'single'`, and static `expo export --platform web`; no legacy monorepo resolver/watch-folder overrides. UI uses React Native `View`, `Text`, `TextInput`, `Pressable`, `ScrollView`; web-specific file/QR/share code stays in platform files. Screens implement Jobs/New estimate/Design library/Updates/Outbox. Enter runs and explicit endpoint joins with flexible labels; duplicate labels remain separate IDs. Show dated active release and complete/incomplete calculation details; manual allowances and overrides match office behavior. Test-only fixture access exists only in a dedicated `EXPO_PUBLIC_TRIAL_TEST_MODE=1` build with a persistent visible banner, never production startup data.
+  Set field package `main` to `index.ts`; its contents are `import { registerRootComponent } from 'expo'; import App from './App.tsx'; registerRootComponent(App);`. This local entry avoids a hoisted dependency's relative App lookup. Use `getDefaultConfig` from `expo/metro-config`, `web.output:'single'`, and static `expo export --platform web`; no legacy monorepo resolver/watch-folder overrides. UI uses React Native `View`, `Text`, `TextInput`, `Pressable`, `ScrollView`; web-specific file/QR/share code stays in platform files. Screens implement Jobs/New estimate/Design library/Updates/Outbox. Enter runs and explicit endpoint joins with flexible labels; duplicate labels remain separate IDs. Show dated active release and complete/incomplete calculation details; manual allowances and overrides match office behavior. Synthetic freeze dependencies are confined to the Vitest harness; test fixtures never enter the production bundle or catalog. No public environment flag or URL authorizes preview mode. Production app/services always use the production policy and their normal database. Before Task 8 supplies enrollment/catalog loading, browser smoke checks cover empty-state navigation and form layout; seeded durable calculation/snapshot behavior is exercised by the adapter tests in this task.
 
   Present/PDF calls shared freeze logic with platform `'field'`; after durable write, render `ProposalModel`. Old drafts/quotes display from saved inputs/results even with no active catalog. Reprice is explicit with visible comparison and only succeeds when a compatible catalog is installed. Pending edits may be saved incomplete, but incomplete/stale calculations cannot be presented. Do not introduce scheduling/drawings or native-only controls.
-- [ ] **Step 4: Run green and browser smoke.** Add a shared fixture parity test importing the office and field calculation entrypoints and comparing entire deterministic results. Test field Preliminary enforcement and frozen read after key/catalog rows are removed. Run tests/typecheck, `npm run build --workspace @estimator/field` and serve exported output over a local test origin. Create/save/reopen/Present a synthetic job, use long text and touch-width layout, then disable network within the already-loaded UI and reopen saved data through a fresh store instance. Cold offline app reload depends on Task 10's app-shell cache and is not claimed here. Physical-device storage/crypto claims wait for Task 10.
+- [ ] **Step 4: Run green and browser smoke.** Add `apps/field/test/parity.test.ts`, importing `calculateOfficeDraft` from office `server/calculation.ts` and `calculateFieldDraft` from field `job-service.ts`, and compare entire deterministic results. Test field Preliminary enforcement and frozen read after key/catalog rows are removed. Run tests/typecheck, `npm run build --workspace @estimator/field` and serve exported output over a local test origin. In the browser, inspect empty Jobs/New estimate/Updates/Outbox states and long text/touch-width layout. The fake-IndexedDB tests create/save/reopen/freeze synthetic jobs and reopen them through a fresh store instance; the first populated browser job workflow runs in Task 8 after catalog loading exists. Cold offline app reload depends on Task 10's app-shell cache and is not claimed here. Physical-device storage/crypto claims wait for Task 10.
 - [ ] **Step 5: Commit.** `git add apps/field packages/domain packages/exchange docs/trial/field-workflow.md package-lock.json` then `git commit -m "feat: add offline field estimates with shared calculation"`.
 
 ## Task 8: Enrollment and atomic foreground catalog refresh
 
 **Files:** Create field `enrollment.ts`, `catalog-client.ts`, `platform/qr.ts`, `platform/lifecycle.ts`; tests `catalog-client.test.ts`, `enrollment.test.ts`, `qr.test.ts`; extend field store/Updates and exchange contracts/catalog validation; update field-workflow/publishing docs.
 
-**Interfaces:** `parseEnrollment(text: string, expectedOrigin: string): Enrollment`; `acceptEnrollment(enrollment: Enrollment, replacePending: boolean, store: FieldStore): Promise<'unchanged' | 'pending'>`; `refreshCatalog(deps: RefreshDeps): Promise<RefreshResult>`; `readActiveCatalog(store: FieldStore, crypto: WebCatalogCrypto): Promise<ActiveCatalog | null>`. `RefreshDeps` contains store, `fetchBytes(url, maxBytes): Promise<Uint8Array>`, crypto, `appVersion`, `engineVersion`, `origin`, `now()`. `RefreshResult` status is `'unchanged' | 'updated' | 'offline' | 'invalid' | 'app-update-required' | 'registration-update-required'`, with message and active release ID. `ActiveCatalog` contains manifest, parsed pricing and design. Store adds `getEnrollment(): Promise<{active: Enrollment|null; pending: Enrollment|null}>`, `setPending(value): Promise<void>`, `getCatalogState()`, `getModule(hash)`, and `activateCatalog(transaction: CatalogActivation): Promise<void>`; `CatalogActivation` includes validated manifest/ciphertexts, chosen key slot, check time, module references and `expectedStateRevision: number`. `catalogState` maintains a monotonically increasing revision advanced by enrollment or activation changes; the transaction rejects a mismatched expected revision.
+**Interfaces:** `parseEnrollment(text: string, expectedOrigin: string): Enrollment`; `acceptEnrollment(enrollment: Enrollment, replacePending: boolean, store: FieldStore): Promise<'unchanged' | 'pending'>`; `refreshCatalog(deps: RefreshDeps): Promise<RefreshResult>`; `readActiveCatalog(store: FieldStore, crypto: WebCatalogCrypto): Promise<ActiveCatalog | null>`. `RefreshDeps` contains store, `fetchBytes(url, maxBytes): Promise<Uint8Array>`, crypto, `appVersion`, `engineVersion`, `origin`, `now()`. `RefreshResult` status is `'unchanged' | 'updated' | 'offline' | 'invalid' | 'app-update-required' | 'registration-update-required' | 'retry-required'`, with message and active release ID. `ActiveCatalog` contains manifest, parsed pricing and design. Store adds `getEnrollment(): Promise<{active: Enrollment|null; pending: Enrollment|null}>`, `setPending(value: Enrollment, expectedRevision: number, replacePending: boolean): Promise<void>`, `getCatalogState()`, `getModule(hash)`, and `activateCatalog(transaction: CatalogActivation): Promise<void>`; `CatalogActivation` includes validated manifest/ciphertexts, chosen key slot, check time, module references and `expectedStateRevision: number`. `catalogState` has one `id:'state'` row with `revision:number`, `manifest:Manifest|null`, `lastSuccessfulCheck:string|null` and `lastAttemptedCheck:string|null`; fresh state has revision 0 and null manifest. Enrollment and activation advance the same revision transactionally; failed-check status writes preserve it and cannot replace enrollment/catalog. The transaction rejects a mismatched expected revision. Add `CatalogActivation = {expectedStateRevision:number; manifest:Manifest; modules:{sha256:string; ref:ModuleRef; body:Uint8Array}[]; checkedAt:string; promotePending:boolean; enrollment:Enrollment}` to field `store.ts`.
 
-`WebCatalogCrypto` is an implementation of the Task 6 `CatalogCrypto` contract plus `decrypt(key, iv, ciphertext, additionalData): Promise<Uint8Array>`. Use the same canonical authenticated metadata builder exported from exchange `catalog.ts` for encryption and decryption; `additionalData` contains business ID, module ID, module version, schema and key ID, excluding ciphertext hash (which cannot exist before encryption). Store only ciphertext for private catalog modules; keys persist separately in enrollment. Decrypted catalog objects live in memory. Active/pending enrollment rows hold the reusable credential; this is simple catalog protection, not protection from the enrolled device owner.
+`WebCatalogCrypto` is an implementation of the Task 6 `CatalogCrypto` contract plus `decrypt(key: CatalogKey, iv: Uint8Array, ciphertext: Uint8Array, additionalData: Uint8Array): Promise<Uint8Array>`. Task 6's exchange `catalog.ts` exports `catalogAdditionalData(businessId: string, module: Pick<ModuleRef,'id'|'version'|'schema'|'keyId'>): Uint8Array`, using UTF-8 canonical JSON. Use that exact builder for encryption and decryption; `additionalData` contains business ID, module ID, module version, schema and key ID, excluding ciphertext hash (which cannot exist before encryption). Store only ciphertext for private catalog modules; keys persist separately in enrollment. Decrypted catalog objects live in memory. Active/pending enrollment rows hold the reusable credential; this is simple catalog protection, not protection from the enrolled device owner.
 
 - [ ] **Step 1: Write staged-update tests.** Create `apps/field/test/catalog-fixture.ts` exporting `catalogHarness()` using fake IndexedDB, the real Web Crypto adapter and an in-memory fetch map; its API is `{store, deps, publish(input), corruptModule(id), fetches, close()}`. `publish` calls `buildCatalogRelease` and replaces the map's current manifest/artifacts, while preserving references only as specified by the release. Add early-QR and failure tests.
 
@@ -673,7 +724,7 @@ it('keeps active key/catalog when a future QR is scanned before publication', as
   await h.publish(v1);
   await acceptEnrollment(enrollmentFor(v1), false, h.store);
   expect((await refreshCatalog(h.deps)).status).toBe('updated');
-  const v2 = {...v1, key: {id: 'key-2', rawBase64: btoa(String.fromCharCode(...new Uint8Array(32).fill(2)))}};
+  const v2 = {...v1, manifest: {...v1.manifest, releaseId: 'catalog-2'}, key: {id: 'key-2', rawBase64: btoa(String.fromCharCode(...new Uint8Array(32).fill(2)))}};
   await acceptEnrollment(enrollmentFor(v2), false, h.store);
   expect((await h.store.getEnrollment()).active?.key.id).toBe(v1.key.id);
   expect((await refreshCatalog(h.deps)).status).toBe('unchanged');
@@ -692,27 +743,32 @@ it('reports unknown key before downloading private modules', async () => {
 });
 ```
 
-  `enrollmentFor(input)` is added to exchange test fixtures and returns the same schema from every enrollment method. Add tests for successful retry rotating both key/catalog, replacing a pending key requiring confirmation, harmless active-key rescan, a fresh pending registration surviving incompatible release, unchanged module skipping, bad checksum/AES tag/schema/cross-reference, and app/engine mismatch distinct from missing key. A module fetch is limited to 5 MiB and the manifest to 64 KiB; reject too many modules and non-allowlisted module IDs.
+  `enrollmentFor(input)` is added to exchange test fixtures and returns the same schema from every enrollment method. Add a stale-context test: capture revision after v1, stage/decrypt v2 outside the transaction, scan a different pending QR (incrementing revision), then call `activateCatalog` with the captured revision; expect `STALE_CATALOG_CONTEXT` and byte-identical active catalog plus the newly scanned pending key. Add tests for successful retry rotating both key/catalog, replacing a pending key requiring confirmation, harmless active-key rescan, a fresh pending registration surviving incompatible release, unchanged module skipping, bad checksum/AES tag/schema/cross-reference, and app/engine mismatch distinct from missing key. A module fetch is limited to 5 MiB and the manifest to 64 KiB; reject too many modules and non-allowlisted module IDs.
 - [ ] **Step 2: Run red.** `npm test -- apps/field/test/catalog-client.test.ts apps/field/test/enrollment.test.ts apps/field/test/qr.test.ts`.
 - [ ] **Step 3: Implement the bounded activation state machine.** Fetch current manifest with `cache:'no-store'`; validate same business/origin, schemas, exact engine compatibility and supported minimum app version. Check key ID before private fetch. Choose matching active or pending key; download only absent/changed modules, verify size/hash, decrypt and validate both modules/cross-references. Keep staged bytes in memory until validated; do all network, hashing, decryption and schema work before entering IndexedDB transactions (crypto awaits can let Safari transactions expire). Serialize refresh/enrollment mutations through one small in-process queue and compare the expected enrollment/catalog revision again at commit, aborting stale work if a new QR changed it; then one Dexie transaction writes module rows, active manifest, active key and last successful check, removes the matching pending row, and discards obsolete active key/unreferenced catalog ciphertext. Failure leaves the existing state untouched. Never clear drafts/quotes/outbox.
 
 ```ts
 await db.transaction('rw', db.enrollment, db.catalogModules, db.catalogState, async () => {
+  const current = await db.catalogState.get('state');
+  if ((current?.revision ?? 0) !== activation.expectedStateRevision) throw new Error('STALE_CATALOG_CONTEXT');
   for (const module of activation.modules) await db.catalogModules.put(module);
-  await db.catalogState.put({id: 'active', manifest: activation.manifest,
-    lastSuccessfulCheck: activation.checkedAt});
+  await db.catalogState.put({id: 'state', revision: activation.expectedStateRevision + 1,
+    manifest: activation.manifest, lastSuccessfulCheck: activation.checkedAt,
+    lastAttemptedCheck: activation.checkedAt});
   if (activation.promotePending) {
     await db.enrollment.put({slot: 'active', value: activation.enrollment});
     await db.enrollment.delete('pending');
   }
-  // Delete only catalog module rows not referenced by this active manifest.
+  const keep = new Set(activation.manifest.modules.map(ref => ref.sha256));
+  const obsolete = (await db.catalogModules.toCollection().primaryKeys()).filter(key => !keep.has(String(key)));
+  await db.catalogModules.bulkDelete(obsolete);
 });
 ```
 
-  Implement the referenced-row deletion in the same transaction. A pending key unrelated to the matching active release remains pending. Distinguish last attempted check from last successful check; offline/error status never changes catalog effective date. Foreground launch/visibility and Check for updates share a single-flight refresh; use a 15-minute interval only while visible. No background guarantees.
+  The only awaits inside this transaction are Dexie operations. `setPending` uses a short transaction over enrollment/catalogState, checks the expected revision and pending-replacement decision, writes the pending row and increments revision. Reject reusing a key ID with different key bytes. On `STALE_CATALOG_CONTEXT`, refresh returns a retryable status and does not clear or replace any row; a later explicit/foreground retry takes a fresh snapshot. A pending key unrelated to the matching active release remains pending. Distinguish last attempted check from last successful check; offline/error status never changes catalog effective date. Foreground launch/visibility and Check for updates share a single-flight refresh; use a 15-minute interval only while visible. No background guarantees.
 
   `platform/qr.ts` uses `getUserMedia` plus jsQR on a canvas frame, stops camera tracks on success/cancel/unmount, and decodes a user-selected QR image through the same decoder. Pasted JSON calls the same parser. Enforce exact production origin/business; a different business is an explicit error, not an implicit replacement. Treat QR text as data only; never log/publish the raw credential. Permission denial leaves pasted/image paths usable. No camera/BarcodeDetector support is assumed on Safari.
-- [ ] **Step 4: Run green and offline browser checks.** Run field tests/typecheck/build. Enroll a synthetic preview from pasted JSON and image, install v1, check offline cached decryption, publish a same-key price-only update and confirm design is not downloaded. Close/reopen the database while the page remains loaded, without network. Cold offline application launch is tested after Task 10 adds app-shell caching. Record that fake IndexedDB/desktop results do not prove iPhone/iPad retention; physical checks remain Task 10.
+- [ ] **Step 4: Run green and offline browser checks.** Run field tests/typecheck/build. Using the owner-validated recipe/catalog from Tasks 1–4 on a test origin, enroll from pasted JSON and image, install v1, create/save/Present a test-customer job and check offline cached decryption, publish a same-key price-only update and confirm design is not downloaded. Close/reopen the database while the page remains loaded, without network. Cold offline application launch is tested after Task 10 adds app-shell caching. Record that fake IndexedDB/desktop results do not prove iPhone/iPad retention; physical checks remain Task 10.
 - [ ] **Step 5: Commit.** `git add apps/field packages/exchange docs/trial/field-workflow.md docs/trial/publishing.md package-lock.json` then `git commit -m "feat: enroll devices and activate catalog updates atomically"`.
 
 ## Task 9: Immutable field outbox and reviewed idempotent office import
@@ -739,11 +795,11 @@ export type ImportReceipt = { packageId: string; contentHash: string;
   customerId: string; jobId: string; importedAt: string; duplicate: boolean };
 ```
 
-`PackageDeps` provides `newId`, `now`, `sha256` and `findByContentHash(hash): Promise<FieldPackage|null>` plus `previousPackageId`; hash canonical **content**, excluding envelope ID/time/previous ID. The package checksum is `contentHash`; validates all content bytes after canonical parsing. Same content returns the already stored immutable package; changed content gets a new ID and previous-package link. Outbox timestamps/state are mutable separate metadata, never edits to the package body. `ShareAdapter` has `canShare(file): boolean`, `share(file): Promise<void>`, `download(file): Promise<void>`; sharing a JSON File is user initiated. Recipient is visibly shown from business settings, but user chooses target and taps Send; no mailto attachment or delivery claim.
+`PackageDeps` declares `newId():string`, `now():string`, `sha256(bytes:Uint8Array):Promise<string>`, `findByContentHash(hash:string):Promise<FieldPackage|null>` and `previousPackageId:string|null`. `memoryPackageDeps()` returns a deterministic sequence of distinct new UUIDs and adds `remember(pkg:FieldPackage):void` on its test-only return value; hash canonical **content**, excluding envelope ID/time/previous ID. The package checksum is `contentHash`; validates all content bytes after canonical parsing. Same content returns the already stored immutable package; changed content gets a new ID and previous-package link. Outbox timestamps/state are mutable separate metadata, never edits to the package body. `ShareAdapter` has `canShare(file): boolean`, `share(file): Promise<void>`, `download(file): Promise<void>`; sharing a JSON File is user initiated. Recipient is visibly shown from business settings, but user chooses target and taps Send; no mailto attachment or delivery claim.
 
 `ImportContext` provides existing package hash, known identity mappings and selected office customer/job revisions. Mapping key is `(businessId, deviceId, sourceEntityType, sourceId)`. `ImportPreview` contains validated package, resolved/suggested target IDs, current revisions, conflict codes (`MISSING_BASE`, `STALE_BASE`, `IDENTITY_CHOICE`, `ID_CONTENT_CONFLICT`), a human-readable change list and an immutable hash of the preview context. Sender/name/address similarities are suggestions only.
 
-- [ ] **Step 1: Write package/outbox/import tests.** Add `syntheticFieldContent()`, `memoryPackageDeps()` and `importHarness()` fixtures to exchange/office test helpers. The office harness uses a temp real SQLite DB and exports `{store, seedExisting(), preview(pkg), accept(preview, choices), counts(), close()}`; seedExisting returns customer/job IDs and current revision.
+- [ ] **Step 1: Write package/outbox/import tests.** Add `syntheticFieldContent()`, `memoryPackageDeps()` and `importHarness()` fixtures to exchange/office test helpers. Create `apps/office/test/import-fixture.ts`; its harness uses a temp real SQLite DB and exports `{store, seedExisting(), makePackage(change), preview(pkg), accept(preview, choices), counts(), close()}`; seedExisting returns customer/job IDs and current revision.
 
 ```ts
 import { expect, it } from 'vitest';
@@ -794,21 +850,21 @@ store.saveSourceMappings(pkg, resolvedOfficeIds);
 store.insertImportReceipt(receipt);
 ```
 
-  Add these internal repository methods in `import-service.ts`/`database.ts`; public `acceptImport` owns the transaction. For linked jobs, the simple trial choices are retain office draft and retain the submission, or create a new office draft revision from the reviewed submission (with selected customer/job IDs rewritten in the office copy). Do not mutate the submitted draft or its frozen quotes; store imported quotes as immutable source snapshots linked to the target office job using a separate association. The submitted Preliminary status stays Preliminary. To issue, office reviews/calculates a draft and creates its own new snapshot. Recheck target revisions and mappings at commit; a changed preview requires renewed review. Existing known mappings preselect targets but do not waive stale/missing-base conflict review. UI shows original source values and target values before acceptance.
+  Add these internal repository methods in `import-service.ts`/`database.ts`; public `acceptImport` owns the transaction. Validate that a selected existing job belongs to the selected/mapped customer; reject inconsistent identity choices rather than reparenting it silently. Require all preview conflict codes to be explicitly resolved/acknowledged, and check package dedup before stale-context checks so a harmless repeat remains harmless. For linked jobs, the simple trial choices are retain office draft and retain the submission, or create a new office draft revision from the reviewed submission (with selected customer/job IDs rewritten in the office copy). Do not mutate the submitted draft or its frozen quotes; store imported quotes as immutable source snapshots linked to the target office job using `imported_quote_links(package_id, source_quote_id, office_job_id)`, created by Task 9 and included in backup. Do not rewrite quote job/customer IDs or fingerprints inside the original snapshots. The submitted Preliminary status stays Preliminary. To issue, office reviews/calculates a draft and creates its own new snapshot. Recheck target revisions and mappings at commit; a changed preview requires renewed review. Existing known mappings preselect targets but do not waive stale/missing-base conflict review. UI shows original source values and target values before acceptance.
 
-  Schema validation rejects prototype/extra fields, bad UUID references, unrecognized calculator/schema versions and wrong business. Checksum establishes corruption detection only. Render notes as text; no HTML/eval/agent execution. Explicitly test payload strings containing instruction-like text remain inert notes.
-- [ ] **Step 4: Run green and a manual round trip.** Run the test command/typecheck/both builds. Export a synthetic field package, download it, import on Mac, link to an existing test customer/job and import again; verify one ledger entry and retained original. Change field content and verify the next package resolves through the mapping but requires missing/stale-base review. Use the actual iPhone/iPad share flows in Task 10; do not send mail from automated code.
+  Schema validation rejects prototype/extra fields, bad UUID references, unsupported structural schema versions and wrong business. Calculator/design/catalog version strings are retained provenance: a delayed compatible-schema snapshot from an older/different engine is displayable and reviewable without that engine/key. Its imported draft is explicitly marked Requires recalculation before any new office quote; current `calculateOfficeDraft` creates a reviewed current result. Test a delayed package with an older calculator string after key retirement: snapshot display/import/dedup succeed, new quote freeze requires current-engine recalculation. Frozen imported snapshots themselves are never recalculated. Checksum establishes corruption detection only. Render notes as text; no HTML/eval/agent execution. Explicitly test payload strings containing instruction-like text remain inert notes.
+- [ ] **Step 4: Run green and a manual round trip.** Run the test command/typecheck/both builds. From a test-customer field job using the owner-validated recipe/settings, export its package, download it, import on Mac, link to an existing test customer/job and import again; verify one ledger entry and retained original. Change field content and verify the next package resolves through the mapping but requires missing/stale-base review. Use the actual iPhone/iPad share flows in Task 10; do not send mail from automated code.
 - [ ] **Step 5: Commit.** `git add packages/exchange apps/field apps/office docs/trial package-lock.json` then `git commit -m "feat: review and deduplicate field submissions"`.
 
 ## Task 10: Backups, safe app upgrades and real-device trial release
 
-**Files:** Create office `server/backup-service.ts`, `ui/Backup.tsx`, test `backup.test.ts`; field `update-controller.ts`, `sw.ts`, `scripts/{build-sw,stage-release}.mjs`, `public/{manifest.webmanifest,icon-192.png,icon-512.png}`, tests `update-controller.test.ts`, `recovery.test.ts`; create `scripts/{verify-deploy,trial-fixture}.mjs`, `docs/trial/recovery.md`, `docs/trial/acceptance.md`; modify app build/lifecycle/store/files/publishing interfaces and native-capability log only with observed results.
+**Files:** Create office `server/backup-service.ts`, `ui/Backup.tsx`, test `backup.test.ts`; field `update-controller.ts`, `recovery-service.ts`, `sw.ts`, `scripts/{build-sw,stage-release}.mjs`, `tsconfig.sw.json`, `public/{manifest.webmanifest,icon-192.png,icon-512.png}`, `apps/office/test/backup-fixture.ts`, tests `update-controller.test.ts`, `recovery.test.ts`; create `scripts/{verify-deploy,trial-fixture}.mjs`, `docs/trial/recovery.md`, `docs/trial/acceptance.md`; modify app build/lifecycle/store/files/publishing interfaces and native-capability log only with observed results.
 
-**Interfaces:** `createBackup(store: OfficeStore, destination: string): Promise<BackupManifest>`; `restoreBackup(source: string, destination: string): Promise<void>`; `exportFieldRecovery(store: FieldStore): Promise<Uint8Array>`; `importFieldRecovery(bytes, store): Promise<RecoveryPreview>` followed by `acceptFieldRecovery(preview, choices): Promise<void>`. `BackupManifest` schema 1 lists database, attachments, settings, catalog archives/recovery keys with relative paths/byte lengths/SHA-256 and creation time. Field recovery is a versioned plaintext file of self-contained drafts/quotes/outbox/customer snapshots with checksum and business/device IDs, **excluding catalog credentials**; reacquire enrollment separately after storage loss. `RecoveryPreview` shows new/conflicting IDs; exact existing records are no-ops, conflicting content requires explicit keep-existing or import-as-copy decisions; never silently overwrite.
+**Interfaces:** `createBackup(store: OfficeStore, destination: string): Promise<BackupManifest>`; `restoreBackup(source: string, destination: string): Promise<void>`; `exportFieldRecovery(store: FieldStore): Promise<Uint8Array>`; `importFieldRecovery(bytes: Uint8Array, store: FieldStore): Promise<RecoveryPreview>` followed by `acceptFieldRecovery(preview: RecoveryPreview, choices: RecoveryChoices, store: FieldStore): Promise<void>`. `createBackup`/`restoreBackup` are owned by office `server/backup-service.ts`; the three field-recovery functions are owned by field `recovery-service.ts`. Exchange contracts define `FieldRecovery = {schema:1; businessId:string; deviceId:string; createdAt:string; drafts:JobDraft[]; quotes:FrozenQuote[]; outbox:OutboxRecord[]; checksum:string}`, `RecoveryChoices = {onConflict:'keep-existing'|'abort'}` and `RecoveryPreview = {payload:FieldRecovery; newIds:string[]; conflictingIds:string[]; existingHashes:Record<string,string>}`. Checksum hashes the canonical payload excluding its checksum. `BackupManifest` schema 1 lists database, attachments, settings, catalog archives/recovery keys with relative paths/byte lengths/SHA-256 and creation time. Field recovery is a versioned plaintext file of self-contained drafts/quotes/outbox/customer snapshots with checksum and business/device IDs, **excluding catalog credentials**; reacquire enrollment separately after storage loss. `RecoveryPreview` shows new/conflicting IDs; exact existing records are no-ops, conflicting content requires explicit Keep existing or Cancel and restore into an empty store decisions; never rewrite immutable quote/package IDs/fingerprints to manufacture copies. Preserve the source device ID in recovered packages so later office mappings still resolve. Recovery acceptance rechecks the previewed existing hashes and commits all chosen rows in one transaction; a changed target requires a new preview.
 
 `requestAppActivation(input: {dirty: boolean; saving: boolean; waitingVersion: string|null}, actions: {flush(): Promise<void>; activate(): Promise<void>}): Promise<'deferred'|'activated'>` defers when dirty/saving unless called by explicit Save and update after a successful flush. `checkStoredCompatibility(store): Promise<boolean>` reads existing v1 enrollment/catalog/jobs/quotes/outbox before activation; unsupported stores remain on the current app and show recovery guidance. No destructive migration or account setup.
 
-- [ ] **Step 1: Write failure/recovery/update tests.** Back up a real test DB with a quote, import receipt/mapping, attachment and local recovery key; restore to a new directory and compare those identities/bytes, then retry a previously imported package and assert duplicate. Inject hash failure and verify the existing destination is untouched. Use Node `backup()` for a consistent SQLite snapshot while holding a brief application write lock across DB/file-manifest capture; disallow catalog/import/attachment mutations during backup. Restore validates into a sibling staging directory with the service stopped, runs SQLite integrity/foreign-key checks, then swaps directories; preserve the pre-restore directory until owner verifies it.
+- [ ] **Step 1: Write failure/recovery/update tests.** Back up a real test DB with a quote, import receipt/mapping, attachment and local recovery key; restore to a new directory and compare those identities/bytes, then retry a previously imported package and assert duplicate. Inject hash failure and verify the existing destination is untouched. Use Node `backup()` for a consistent SQLite snapshot while holding a brief application write lock across DB/file-manifest capture; disallow catalog/import/attachment mutations during backup. Reject absolute/traversing/symlink artifact paths before reading a backup. Restore validates into a sibling staging directory with the service stopped, runs SQLite integrity/foreign-key checks, then swaps directories; preserve the pre-restore directory until owner verifies it.
 
 ```ts
 import { expect, it, vi } from 'vitest';
@@ -826,39 +882,74 @@ it('a failed Save and update preserves the current app', async () => {
 });
 ```
 
+  Add this backup test to `apps/office/test/backup.test.ts` (imports are shown, not inferred):
+
+```ts
+import { expect, it } from 'vitest';
+import { createBackup, restoreBackup } from '../src/server/backup-service.ts';
+import { openOfficeStore } from '../src/server/database.ts';
+import { backupHarness } from './backup-fixture.ts';
+it('restores immutable quotes, mappings, attachments and duplicate import evidence', async () => {
+  const h = await backupHarness();
+  const before = h.snapshot(h.store);
+  const manifest = await createBackup(h.store, h.backupDir);
+  expect(manifest.files.length).toBeGreaterThan(2);
+  await restoreBackup(h.backupDir, h.restoreDir);
+  const restored = openOfficeStore(h.restoreDir);
+  expect(h.snapshot(restored)).toEqual(before);
+  expect(h.replayAcceptedPackage(restored).duplicate).toBe(true);
+  expect(h.attachmentBytes(h.restoreDir)).toEqual(h.attachmentBytes(h.sourceDir));
+  expect(h.recoveryKeyBytes(h.restoreDir)).toEqual(h.recoveryKeyBytes(h.sourceDir));
+  restored.close(); await h.close();
+});
+```
+
+  `backupHarness()` creates one temporary root with `sourceDir`, `backupDir`, `restoreDir`, a real store, one accepted package/mapping/quote, a three-byte attachment `[1,2,3]` and a synthetic 32-byte recovery key. Its `snapshot(store)` returns sorted customer/job/quote IDs and bodies plus import receipts/source mappings/imported-quote links; `replayAcceptedPackage(store)` calls the actual importer with the retained package; byte helpers read the named artifacts; `close()` closes/removes all temporary state. Define `BackupManifest.files` as `{path:string; bytes:number; sha256:string}[]` plus schema/createdAt, in exchange contracts. Add the failed-hash/rollback and delayed-package cases to this same fixture.
+
   Define `saveAndActivate(actions: {flush(): Promise<void>; activate(): Promise<void>}): Promise<void>` in update-controller: await flush, await compatibility check through the activation adapter, then activate. No `finally` activation. Add tests for pending outbox preservation, malformed recovery checksum, conflicts requiring choices and failed recovery transaction rollback. These tests complement actual service-worker/device checks; they do not establish them.
 - [ ] **Step 2: Run red.** `npm test -- apps/office/test/backup.test.ts apps/field/test/recovery.test.ts apps/field/test/update-controller.test.ts`.
 - [ ] **Step 3: Implement backup/export and a narrow app-shell service worker.** Backup UI chooses destination, reports success only after copied artifacts/hashes verify, and explains that the backup includes private recovery keys. Do not put backups in static staging; do not add another encryption/key system. Field UI offers export recovery from Jobs/Outbox, preserves originals during failed writes and clearly distinguishes local save from office backup.
 
-  `build-sw.mjs` takes the Expo output's exact asset list and app version, transpiles the import-free `sw.ts` using pinned TypeScript `transpileModule`, and emits `sw.js` plus a precache list. `stage-release.mjs` merges only built app files and Task 6's selected encrypted modules/current manifest. App metadata/icons are plain generated local assets (a simple high-contrast “PE” icon rendered to 192/512 PNG by a small canvas export in the browser during setup is sufficient); no image-generation or design platform is required.
+  `build-sw.mjs` takes the Expo output's exact asset list and app version, transpiles the import-free `sw.ts` using pinned TypeScript `transpileModule`, and emits `sw.js` plus a precache list. `stage-release.mjs` merges only built app files and Task 6's selected encrypted modules/current manifest. Also emit public `app-release.json` with `{appVersion, appAssetHash, supportedStoreSchemas:[1], supportedCatalogSchemas:[1], engineVersion}` and link the web manifest from exported index.html. Register `sw.js` in field `platform/lifecycle.ts` using `navigator.serviceWorker.register('/sw.js', {scope:'/', updateViaCache:'none'})`; registration runs only for the production static build, never during Expo development. `update-controller` observes `updatefound`/waiting-worker state and listens for explicit activation replies. Create `tsconfig.sw.json` with `lib:['ES2022','WebWorker']`, no ambient Node/React types, `noEmit:true`, include only `src/sw.ts`, and exclude that file from the main field TS project; field typecheck runs both projects. App metadata/icons are plain generated local assets (a simple high-contrast “PE” icon rendered to 192/512 PNG by a small canvas export in the browser during setup is sufficient); no image-generation or design platform is required.
 
 ```ts
-// sw.ts: essential control flow, with precache list injected by build-sw.mjs.
-self.addEventListener('install', event => {
+// sw.ts: import-free classic worker; build-sw.mjs injects these constants.
+declare const APP_CACHE: string;
+declare const APP_ASSETS: string[];
+declare const APP_VERSION: string;
+const sw = self as unknown as ServiceWorkerGlobalScope;
+sw.addEventListener('install', event => {
   event.waitUntil(caches.open(APP_CACHE).then(cache => cache.addAll(APP_ASSETS)));
   // Do not call skipWaiting here: an edit may be open in the old app.
 });
-self.addEventListener('message', event => {
-  if (event.data?.type === 'ACTIVATE_READY_APP') void self.skipWaiting();
+sw.addEventListener('message', event => {
+  if (event.data?.type !== 'ACTIVATE_READY_APP') return;
+  event.waitUntil((async () => {
+    const clients = await sw.clients.matchAll({type: 'window', includeUncontrolled: true});
+    if (clients.length > 1) {
+      event.source?.postMessage({type: 'CLOSE_OTHER_APP_WINDOWS'}); return;
+    }
+    await sw.skipWaiting();
+  })());
 });
 // Fetch handling must exclude /catalog/current.json and /catalog/modules/*.
 // Navigation falls back to this version's cached index.html; hashed app assets use its cache.
 ```
 
-  Define injected `APP_CACHE`, `APP_ASSETS` and `APP_VERSION` explicitly in the build output and include all static chunks/fonts needed offline. Avoid caching catalog requests in the service worker; catalog-client owns encrypted cache. `activate` checks the app build's supported schema/version metadata and performs no IndexedDB changes. Keep previous app-shell cache until the new page reports `APP_BOOT_OK` after reading the store; then remove only older app-shell caches. Do not delete enrollment/job/catalog databases. Controller waits for the waiting worker and a clean saved state; an explicit Save and update awaits flush, then sends activation and reloads on controllerchange. On launch, auto-activate only when no unsaved edit; prepared/unsent submissions remain durable. If storage/compatibility check fails, keep the current version and explain the error. A future breaking schema release is outside this routine path.
+  Define injected `APP_CACHE`, `APP_ASSETS` and `APP_VERSION` explicitly in the build output and include all static chunks/fonts needed offline. Avoid caching catalog requests in the service worker; catalog-client owns encrypted cache. Before requesting activation, the current page obtains the waiting worker's injected release metadata through a message/reply and calls `checkStoredCompatibility` against those supported schemas and engine version, including actual active-catalog read/decryption. A failed read or unsupported version defers activation. The worker performs no IndexedDB changes. Refuse activation while another app window/client is open and ask the owner to close it; this is one client-count check, not a coordination framework. Recheck in the waiting worker immediately before `skipWaiting`. Test two open clients and the single-client retry. Keep previous app-shell cache until the new page reports `APP_BOOT_OK` after reading the store; then remove only older app-shell caches once no old app window remains. If boot fails, keep previous caches and show recovery/retry guidance; do not clear local data. Do not delete enrollment/job/catalog databases. Controller waits for the waiting worker and a clean saved state; an explicit Save and update awaits flush, then sends activation and reloads on controllerchange only after a requested update (initial worker installation must not reload an edit). On launch, auto-activate only when no unsaved edit; prepared/unsent submissions remain durable. If storage/compatibility check fails, keep the current version and explain the error. A future breaking schema release is outside this routine path.
 
-  `verify-deploy.mjs` checks that every manifest module and precache asset exists, size/hash matches, no path escapes, and no `.db`, `.sqlite`, `.pem`, raw-key JSON, QR credentials, customer exports or recovery packages are staged. Restrict by allowlisted generated paths rather than filename blacklists alone. Configure current manifest and service-worker responses as revalidate/no-cache; immutable hashed assets may use long cache lifetime. Publish the assembled directory atomically using the owner's existing Cloudflare Pages project/credentials, with no Functions or service additions. Add a documented `wrangler pages deploy <stage-dir> --project-name <owner-selected-project>` command using actual selected values in the local execution record; do not invent a production name/domain in this plan.
+  `verify-deploy.mjs` checks that every manifest module and precache asset exists, size/hash matches, no path escapes, and no `.db`, `.sqlite`, `.pem`, raw-key JSON, QR credentials, customer exports or recovery packages are staged. Restrict by allowlisted generated paths rather than filename blacklists alone. Create `apps/field/public/_headers` in this task: `/catalog/current.json`, `/app-release.json` and `/sw.js` use `Cache-Control: no-cache`; hashed app/module paths use immutable caching. Include `_headers` in the staging allowlist. Configure current manifest and service-worker responses as revalidate/no-cache; immutable hashed assets may use long cache lifetime. Publish the assembled directory atomically using the owner's existing Cloudflare Pages project/credentials, with no Functions or service additions. Add a documented `wrangler pages deploy <stage-dir> --project-name <owner-selected-project>` command using actual selected values in the local execution record; do not invent a production name/domain in this plan.
 
 - [ ] **Step 4: Run green and the full automated checks once.** Run `npm test -- apps/office/test/backup.test.ts apps/field/test/recovery.test.ts apps/field/test/update-controller.test.ts`, then `npm run verify`. Run `node scripts/verify-deploy.mjs <actual-stage-directory>` after staging. Keep the command arguments in the execution evidence with the actual paths. Confirm a restored Mac quote, import mapping and duplicate ledger behavior against original bytes, and a delayed plaintext package imported after old catalog keys are removed from the device.
-- [ ] **Step 5: Perform concrete iPhone/iPad acceptance at the stable origin.** In `docs/trial/acceptance.md`, record app/engine versions, catalog IDs/hashes, device/iOS/browser/install mode, fixture hash, expected/actual result and pass/fail. The one-off `trial-fixture.mjs` emits the canonical synthetic conformance input/results as a downloadable JSON, not a diagnostics platform. Test mode can load it explicitly on Mac/iPhone/iPad and compare quantities, packs, selected tiers, costs and selling/tax totals byte-for-byte. Production UI refuses it as an owner-validated real quote. Repeat the useful workflow with the owner's validated recipe/settings/prices before the first real-job quote.
+- [ ] **Step 5: Perform concrete iPhone/iPad acceptance at the stable origin.** In `docs/trial/acceptance.md`, record app/engine versions, catalog IDs/hashes, device/iOS/browser/install mode, fixture hash, expected/actual result and pass/fail. The one-off `trial-fixture.mjs` emits the canonical synthetic conformance input/results as a downloadable JSON, not a diagnostics platform. Add a one-off read-only `runConformanceFixture(input: EstimateInput): EstimateResult` action in office Setup and field Updates: require `recipe.validation.purpose === 'test-only'`, call shared calculation and show/export the result only. It cannot save a job, freeze a quote or publish a catalog. Use it to compare quantities, packs, selected tiers, costs and selling/tax totals byte-for-byte on Mac/iPhone/iPad; it needs no preview freeze policy or test-mode build. Production UI refuses it as an owner-validated real quote. Repeat the useful workflow with the owner's validated recipe/settings/prices before the first real-job quote.
 
-  Execute this sequence on **both** iPhone and iPad:
+  Execute this sequence on **both** iPhone and iPad using production-mode app builds and the owner-validated recipe/catalog (synthetic conformance calculations run separately and never become issued real quotes):
 
   1. Install app **1.0.0** on the chosen stable HTTPS origin, enroll by camera, and separately check QR-image and pasted enrollment. Denied camera permission must leave both recovery paths usable. Populate active catalog, saved draft, frozen Preliminary quote and prepared outbox. Export a local recovery file.
   2. Airplane/offline reopen: read/decrypt catalog and calculate the conformance input, reopen draft/quote/outbox and generate PDF without network. Compare Mac results using the exact same release/inputs; do not compare against refreshed office live prices. Inspect customer PDF visually.
   3. Publish a same-key pricing-only release: foreground updates fetch only changed pricing, preserve design bytes and leave existing draft/quote totals unchanged. Corrupt a preview release, publish incompatible app/engine metadata and try offline refresh: each retains active data and shows the correct status.
   4. Rotate using a pending QR scanned **before** publication. Check active-key access remains; a different pending QR requires explicit confirmation. Publish re-encrypted modules and remove superseded packs from the current file set. On an old-key-only enrollment, verify Registration update required before module download. Interrupt a matching new-key install, reopen offline with old active data, then retry successfully; old draft/quote/outbox still display after old device key/catalog are removed.
-  5. Publish a genuinely different app **1.0.1** with visible version text and a distinct app-shell asset hash while the device has active enrollment, **a pending key**, catalog, draft, frozen quote and outbox. Leave an edit unsaved: no reload or activation. Use Save and update; verify failed-save behavior first, then successful activation. Assert all stored records/keys remain byte-equivalent and reopen **1.0.1** offline. Repeat upgrade once from a clean launch. A reload of 1.0.0 is not evidence of this case.
+  5. Publish a genuinely different app **1.0.1** with visible version text and a distinct app-shell asset hash while the device has active enrollment, **a pending key**, catalog, draft, frozen quote and outbox. Leave an edit unsaved: no reload or activation. Use Save and update; verify failed-save behavior first, then successful activation. Assert the post-save durable records/keys remain byte-equivalent across activation (the intentional edit changes its draft before this comparison), and reopen **1.0.1** offline. Repeat upgrade once from a clean launch. A reload of 1.0.0 is not evidence of this case.
   6. Share the prepared JSON attachment through the device's user-selected mail app, inspect its recipient and send it manually; download/save fallback must also work. Record actual iPad sharing behavior rather than inheriting the earlier iPhone probe result. Import on Mac, link identities, replay the same package, then a changed package. Confirm explicit office-confirmed state only after owner action.
   7. Restore Mac backup into an isolated data directory and field recovery into a separate test browser profile; verify snapshot identities, source mappings, duplicate ledger, attachment and recovery-key bytes. Demonstrate a failed local save leaves the previous durable job available and does not display Saved.
 
@@ -890,7 +981,7 @@ npm install --workspace @estimator/field --save-exact expo@58.0.22 react@19.3.0 
 npm exec --workspace @estimator/field -- expo install --check
 ```
 
-Define package exports as `".": "./src/index.ts"` for shared packages and use explicit `.ts` relative imports in their source/tests. Use `module: "ESNext"`, `moduleResolution: "Bundler"`, `allowImportingTsExtensions: true`, `noEmit: true`, `strict: true`, and `jsx: "react-jsx"`; `tsc --noEmit` checks each workspace. Vite, Expo Metro and Vitest consume the same source entrypoints; office Node starts with the pinned `tsx` runner so no unbuilt TypeScript is passed to unsupported runtime paths. Office scripts: `dev` starts local API and Vite using `apps/office/scripts/dev.mjs` (create in Task 4; Node spawn supervisor); `build` runs Vite; `start` serves the built UI from Node. Field `start` runs Expo web. Task 7's `build` runs Expo web export only; Task 10 appends `build-sw.mjs` after creating it. Task 4's real Vite build and Task 7's real Expo export are required consumer-resolution gates, not just typechecks; resolve any SDK/Metro incompatibility before continuing. Root build runs only app builds; shared libraries are typechecked and bundled by consumers. Add missing script/config files within the owning task, not an infrastructure-only deliverable. The office dev supervisor stops both children on exit and never binds LAN interfaces.
+Give internal workspace packages version `0.0.0` and `private:true`. Add `@estimator/domain:"0.0.0"` to office dependencies in Task 4; exchange depends on domain in Task 5 and office adds exchange then; field depends on both in Task 7. npm workspaces resolves these local names/versions to workspace symlinks, not published packages. Use `@estimator/domain` and `@estimator/exchange` imports between production workspaces; test fixture imports may use the shown relative paths. Define package exports as `".": "./src/index.ts"` for shared packages and use explicit `.ts` relative imports in their source/tests. Use `module: "ESNext"`, `moduleResolution: "Bundler"`, `allowImportingTsExtensions: true`, `noEmit: true`, `strict: true`, and `jsx: "react-jsx"`; `tsc --noEmit` checks each workspace. Vite, Expo Metro and Vitest consume the same source entrypoints; office Node starts with the pinned `tsx` runner so no unbuilt TypeScript is passed to unsupported runtime paths. Office scripts: `dev` starts local API and Vite using `apps/office/scripts/dev.mjs` (create in Task 4; Node spawn supervisor); `build` runs Vite; `start` serves the built UI from Node. Field `start` runs Expo web. Task 7's `build` runs Expo web export only; Task 10 appends `build-sw.mjs` after creating it. Task 4's real Vite build and Task 7's real Expo export are required consumer-resolution gates, not just typechecks; resolve any SDK/Metro incompatibility before continuing. Root build runs only app builds; shared libraries are typechecked and bundled by consumers. Add missing script/config files within the owning task, not an infrastructure-only deliverable. The office dev supervisor stops both children on exit and never binds LAN interfaces.
 
 ## Trial acceptance coverage and stop condition
 
