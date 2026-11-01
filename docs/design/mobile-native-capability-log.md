@@ -1,0 +1,30 @@
+# Mobile native-capability log
+
+Started: November 1, 2026. Owner decision: deliver the first mobile app as a CDN-hosted PWA using React Native Web/Expo, with no App Store submission or Apple developer membership. Reconsider an installed native app when observed limitations justify the installation/distribution work.
+
+This is a decision log, not a list of required native features. A candidate is not a proven PWA limitation. Record the actual device, browser/app version, attempted workflow, and result before marking a capability blocked.
+
+## How to maintain the log
+
+For each capability, capture its user benefit, frequency of use, present workaround, observed cost or failure, platform evidence, and expected native integration. Use these states: candidate, supported in PWA, limited in PWA, blocked on tested platform, deferred by scope, or resolved. Add the related job/support record when actual use supplies evidence. Keep confirmed limitations separate from cosmetic preferences.
+
+Review after the first real-job trial and whenever a limitation prevents an important workflow. Recommend a native release when a frequently needed task is blocked, a workaround repeatedly costs material time or loses data, or several recurring limitations together outweigh native build/distribution maintenance. No arbitrary item count triggers migration. The owner makes the decision from the recorded evidence.
+
+## Current entries
+
+| ID | Capability and user benefit | State and evidence | First-version approach | Native migration work if justified |
+| --- | --- | --- | --- | --- |
+| NC-01 | Platform-specific native controls and navigation for efficient field entry | Candidate. Owner wants native UI elements; no specific control has yet been demonstrated inadequate in the PWA. React Native Web renders browser elements, rather than iOS/Android native views. | Use accessible, touch-friendly React Native Web components and browser-supported system controls. Record concrete problems encountered in real jobs. | Test components, navigation, keyboard behavior, layout and accessibility on native iOS/Android; replace web-specific controls where needed. |
+| NC-02 | Automatic catalog refresh while the app is closed | Limited in PWA as a cross-platform design assumption; not required for the initial workflow. No phone background-refresh trial is claimed. | Check on open/foreground plus an explicit Check for updates action. Estimate offline using a dated local catalog. | Implement and test OS-managed background tasks; native execution timing still cannot be guaranteed. |
+| NC-03 | Portable printer access on site | Candidate, untested. No printer model selected; Bluetooth presence alone does not establish compatibility. | Produce a customer PDF; test system printing/share or the vendor's app against the selected printer before buying/integrating. | Printer-specific SDK/transport and native print UI, with actual-device/printer checks. |
+| NC-04 | Reliable local keys and job storage | QR enrollment, retained key, encrypted CDN download and offline cached decryption passed by owner observation on iPhone and iPad in V4. Browser storage removal/eviction remains a recovery consideration; no eviction failure observed. Android untested. | IndexedDB, encrypted private catalog cache, retained enrollment across app updates, durable outbox and explicit export/recovery. | Native database/file adapters and OS key storage; migrate and verify existing PWA jobs and keys rather than assuming shared storage. |
+| NC-05 | Read/watch a designated iCloud/Downloads folder automatically | Deferred by scope. No arbitrary folder-watching capability is assumed or required in the PWA. | Automatic CDN catalog download. Explicit file selection is a recovery/import action. | Platform document providers, file permissions and change handling if folder automation becomes necessary. |
+| NC-06 | Share field submissions through the user's mail app | Supported in tested iPhone PWA workflow: owner sent a synthetic attachment and confirmed receipt; checksum was verified. Android and iPad email handoff remain untested. | Native share sheet exposed by the browser; download/manual attachment fallback. Sharing success means handoff, not office receipt. | Native sharing/mail adapter and exact attachment behavior tests; email delivery still needs acknowledgment. |
+| NC-07 | QR camera enrollment | Supported in tested iPhone/iPad V4 procedure by owner report; encrypted catalog and key remained available offline. | Scan inside the installed PWA. Provide pasted enrollment recovery and QR-image import if emailing registration images is used. | Native camera scanner and permission lifecycle; keep enrollment payload format compatible. |
+| NC-08 | Customer signature capture on tablet | Deferred by scope, not a proven PWA restriction. No signature trial performed. | Start with customer-safe proposal display/PDF. Evaluate browser signature capture against the exact bid revision in a later increment. | Only add native capture if device testing identifies a material unmet need. Native installation alone does not establish legal validity. |
+
+## Migration expectations
+
+Shared TypeScript models, calculation rules, package contracts and many React Native Web components are intended to carry forward. A native transition is not promised to be a build-configuration change. Browser APIs, IndexedDB, Web Crypto key persistence, service workers, DOM/SVG-specific rendering, file handling, printing and sharing need review or alternate implementations. Native apps do not automatically inherit the PWA's browser database or enrolled key.
+
+Keep platform access behind small interfaces and implement only the web/Mac adapters needed for the first version. Do not build speculative native adapters now. React Native Web reuse reduces migration work; acceptance on actual native devices remains required.
