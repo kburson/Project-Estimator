@@ -1,0 +1,13 @@
+{
+  "scope": "first usable trial plan only",
+  "plan": "docs/superpowers/plans/2026-11-01-first-usable-project-estimator.md",
+  "spec": "docs/superpowers/specs/2026-11-01-project-estimator-pwa-v1-design.md",
+  "specSha256": "0971e6426aadf888a3652d9fae78707793f4af7f4b221e5b577ef8deca253f2c",
+  "modelRequested": "Astra 6",
+  "orchestratorModel": "gpt-6-astra",
+  "reasoningEffort": "high",
+  "authorAndSarAgent": "/root/astra_trial_plan",
+  "sameAgentSar": true,
+  "method": "orchestrated Astra authoring followed by same-agent SAR; no external review protocol receipt claimed",
+  "implementationAuthorized": false
+}
