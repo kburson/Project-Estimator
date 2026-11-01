@@ -1,0 +1,18 @@
+{
+  "requestedModel": "claude-opus-5-5",
+  "requestedEffort": "high",
+  "method": "independent Claude CLI read-only review, round 2; no managed protocol acceptance",
+  "reviewPassesRequested": 1,
+  "gitHead": "9f000cbb3f521dc12a9eebcd617e75a66dc208ab",
+  "startedAtUtc": "2026-11-01T16:04:06.763113+00:00",
+  "artifacts": {
+    "docs/superpowers/specs/2026-11-01-project-estimator-pwa-v1-design.md": "9bf8d3deb10b87791f0016bd95ec965fd82de2432bceee8cb0ec2a9f8f8e6d22",
+    "docs/design/mobile-native-capability-log.md": "106d939ed121badea4cbae78b8a575421e782d07f55b5bb649450ddafd2f5129"
+  },
+  "tools": [
+    "Read",
+    "Glob",
+    "Grep"
+  ],
+  "permissionMode": "plan"
+}
