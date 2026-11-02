@@ -1,0 +1,25 @@
+{
+  "name": "project-estimator",
+  "version": "0.0.1",
+  "description": "Estimate Home Improvement Jobs like fences, irrigation, landscaping, light fixtures, wall patches, painting, pressure washing...",
+  "homepage": "https://github.com/kburson/Project-Estimator#readme",
+  "bugs": {
+    "url": "https://github.com/kburson/Project-Estimator/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kburson/Project-Estimator.git"
+  },
+  "author": "kburson",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@kburson/ai-task-manager": "file:vendors/kburson-ai-task-manager-0.1.0.tgz"
+  }
+}
