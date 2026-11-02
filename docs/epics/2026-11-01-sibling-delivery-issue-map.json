@@ -1,0 +1,2064 @@
+{
+  "schema": "project-estimator.sibling-delivery-map/v1",
+  "index": 36,
+  "sourcePlanCommit": "a1f4a7bcefb82e5499219f33c34aed280c76bceb",
+  "implementationAuthorized": false,
+  "epics": [
+    {
+      "key": "foundation",
+      "issue": 37,
+      "title": "Deliver the first office and field builds",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+      "blockedBy": [],
+      "children": [
+        {
+          "issue": 38,
+          "title": "Pin the workspace while retaining AITM",
+          "task": 1,
+          "section": "### Task 1: Pin the workspace while retaining AITM",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 68,
+          "title": "Validate exact run and measured-length inputs",
+          "task": 2,
+          "section": "### Task 2: Validate exact run and measured-length inputs",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            38
+          ]
+        },
+        {
+          "issue": 69,
+          "title": "Build and launch the loopback office shell",
+          "task": 3,
+          "section": "### Task 3: Build and launch the loopback office shell",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            38
+          ]
+        },
+        {
+          "issue": 72,
+          "title": "Export the static field application shell",
+          "task": 4,
+          "section": "### Task 4: Export the static field application shell",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            38
+          ]
+        },
+        {
+          "issue": 77,
+          "title": "Stage only public application assets",
+          "task": 5,
+          "section": "### Task 5: Stage only public application assets",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            72
+          ]
+        },
+        {
+          "issue": 79,
+          "title": "Configure trunk-triggered Cloudflare delivery",
+          "task": 6,
+          "section": "### Task 6: Configure trunk-triggered Cloudflare delivery",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            77
+          ]
+        },
+        {
+          "issue": 82,
+          "title": "Configure trunk-triggered local server builds",
+          "task": 7,
+          "section": "### Task 7: Configure trunk-triggered local server builds",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            69
+          ]
+        },
+        {
+          "issue": 85,
+          "title": "Rehearse candidate delivery before the first trunk merge",
+          "task": 8,
+          "section": "### Task 8: Rehearse candidate delivery before the first trunk merge",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            68,
+            79,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "key": "catalog",
+      "issue": 40,
+      "title": "Maintain vendor and component identities",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+      "blockedBy": [
+        37
+      ],
+      "children": [
+        {
+          "issue": 67,
+          "title": "Store validated catalog identities",
+          "task": 1,
+          "section": "### Task 1: Store validated catalog identities",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 70,
+          "title": "Edit vendors and component specifications",
+          "task": 2,
+          "section": "### Task 2: Edit vendors and component specifications",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            67
+          ]
+        },
+        {
+          "issue": 73,
+          "title": "Edit explicitly identified vendor offers",
+          "task": 3,
+          "section": "### Task 3: Edit explicitly identified vendor offers",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            67
+          ]
+        },
+        {
+          "issue": 76,
+          "title": "Reject changes to referenced economic context",
+          "task": 4,
+          "section": "### Task 4: Reject changes to referenced economic context",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            67
+          ]
+        },
+        {
+          "issue": 80,
+          "title": "Create replacement identities for economic edits",
+          "task": 5,
+          "section": "### Task 5: Create replacement identities for economic edits",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            70,
+            73,
+            76
+          ]
+        }
+      ]
+    },
+    {
+      "key": "prices",
+      "issue": 39,
+      "title": "Keep dated prices and deliberate business settings",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-prices.md",
+      "blockedBy": [
+        40
+      ],
+      "children": [
+        {
+          "issue": 66,
+          "title": "Append and correct immutable price observations",
+          "task": 1,
+          "section": "### Task 1: Append and correct immutable price observations",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 71,
+          "title": "Enter known prices and permitted arrangements",
+          "task": 2,
+          "section": "### Task 2: Enter known prices and permitted arrangements",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            66
+          ]
+        },
+        {
+          "issue": 74,
+          "title": "Require explicit business labor markup and tax decisions",
+          "task": 3,
+          "section": "### Task 3: Require explicit business labor markup and tax decisions",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            66
+          ]
+        },
+        {
+          "issue": 78,
+          "title": "Choose defaults and inspect dated corrections",
+          "task": 4,
+          "section": "### Task 4: Choose defaults and inspect dated corrections",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            71,
+            74
+          ]
+        }
+      ]
+    },
+    {
+      "key": "bays",
+      "issue": 41,
+      "title": "Explain bays and shared posts",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-bays.md",
+      "blockedBy": [
+        37
+      ],
+      "children": [
+        {
+          "issue": 81,
+          "title": "Record the owner single-recipe decision",
+          "task": 1,
+          "section": "### Task 1: Record the owner single-recipe decision",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 84,
+          "title": "Validate versioned recipe rules",
+          "task": 2,
+          "section": "### Task 2: Validate versioned recipe rules",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            81
+          ]
+        },
+        {
+          "issue": 86,
+          "title": "Calculate exact bays and unique post identities",
+          "task": 3,
+          "section": "### Task 3: Calculate exact bays and unique post identities",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            84
+          ]
+        },
+        {
+          "issue": 89,
+          "title": "Inspect geometry and named invalid inputs",
+          "task": 4,
+          "section": "### Task 4: Inspect geometry and named invalid inputs",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            86
+          ]
+        }
+      ]
+    },
+    {
+      "key": "requirements",
+      "issue": 42,
+      "title": "Explain material cuts and stock requirements",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+      "blockedBy": [
+        41,
+        40
+      ],
+      "children": [
+        {
+          "issue": 83,
+          "title": "Retain owner-validated recipe versions",
+          "task": 1,
+          "section": "### Task 1: Retain owner-validated recipe versions",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 87,
+          "title": "Derive installed material requirements",
+          "task": 2,
+          "section": "### Task 2: Derive installed material requirements",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 90,
+          "title": "Retain cuts and conservative stock use",
+          "task": 3,
+          "section": "### Task 3: Retain cuts and conservative stock use",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            87
+          ]
+        },
+        {
+          "issue": 93,
+          "title": "Count fasteners from installed pieces",
+          "task": 4,
+          "section": "### Task 4: Count fasteners from installed pieces",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            87
+          ]
+        },
+        {
+          "issue": 96,
+          "title": "Explain requirements and unused stock",
+          "task": 5,
+          "section": "### Task 5: Explain requirements and unused stock",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            83,
+            90,
+            93
+          ]
+        }
+      ]
+    },
+    {
+      "key": "purchases",
+      "issue": 43,
+      "title": "Explain purchased packs and eligible prices",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+      "blockedBy": [
+        42,
+        39
+      ],
+      "children": [
+        {
+          "issue": 88,
+          "title": "Pool requirements before package rounding",
+          "task": 1,
+          "section": "### Task 1: Pool requirements before package rounding",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 92,
+          "title": "Select only permitted pricing arrangements",
+          "task": 2,
+          "section": "### Task 2: Select only permitted pricing arrangements",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            88
+          ]
+        },
+        {
+          "issue": 94,
+          "title": "Extend tax-inclusive costs and allocate cents",
+          "task": 3,
+          "section": "### Task 3: Extend tax-inclusive costs and allocate cents",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            88
+          ]
+        },
+        {
+          "issue": 97,
+          "title": "Compose purchase provenance and named failures",
+          "task": 4,
+          "section": "### Task 4: Compose purchase provenance and named failures",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            92,
+            94
+          ]
+        },
+        {
+          "issue": 100,
+          "title": "Inspect pack spares and selected-price provenance",
+          "task": 5,
+          "section": "### Task 5: Inspect pack spares and selected-price provenance",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            97
+          ]
+        }
+      ]
+    },
+    {
+      "key": "costs",
+      "issue": 44,
+      "title": "Calculate complete segment costs",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+      "blockedBy": [
+        43
+      ],
+      "children": [
+        {
+          "issue": 91,
+          "title": "Define estimate inputs and production readiness",
+          "task": 1,
+          "section": "### Task 1: Define estimate inputs and production readiness",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 95,
+          "title": "Attribute materials and person-hour costs once",
+          "task": 2,
+          "section": "### Task 2: Attribute materials and person-hour costs once",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            91
+          ]
+        },
+        {
+          "issue": 98,
+          "title": "Cost manual work without inventing geometry or hours",
+          "task": 3,
+          "section": "### Task 3: Cost manual work without inventing geometry or hours",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            91
+          ]
+        },
+        {
+          "issue": 101,
+          "title": "Apply segment selling rules and customer tax",
+          "task": 4,
+          "section": "### Task 4: Apply segment selling rules and customer tax",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            91
+          ]
+        },
+        {
+          "issue": 104,
+          "title": "Compose complete and incomplete estimate results",
+          "task": 5,
+          "section": "### Task 5: Compose complete and incomplete estimate results",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            95,
+            98,
+            101
+          ]
+        },
+        {
+          "issue": 107,
+          "title": "Expose a read-only Mac conformance calculation",
+          "task": 6,
+          "section": "### Task 6: Expose a read-only Mac conformance calculation",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            104
+          ]
+        }
+      ]
+    },
+    {
+      "key": "visits",
+      "issue": 45,
+      "title": "Save and reopen calculated site visits",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+      "blockedBy": [
+        44
+      ],
+      "children": [
+        {
+          "issue": 99,
+          "title": "Define validated customer and calculated-job persistence",
+          "task": 1,
+          "section": "### Task 1: Define validated customer and calculated-job persistence",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 102,
+          "title": "Persist customer identities and contact history",
+          "task": 2,
+          "section": "### Task 2: Persist customer identities and contact history",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            99
+          ]
+        },
+        {
+          "issue": 105,
+          "title": "Persist and reopen calculated job snapshots",
+          "task": 3,
+          "section": "### Task 3: Persist and reopen calculated job snapshots",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            102
+          ]
+        },
+        {
+          "issue": 108,
+          "title": "Reject competing stale job revisions",
+          "task": 4,
+          "section": "### Task 4: Reject competing stale job revisions",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            105
+          ]
+        },
+        {
+          "issue": 111,
+          "title": "Edit customer and jobsite information",
+          "task": 5,
+          "section": "### Task 5: Edit customer and jobsite information",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            102,
+            105
+          ]
+        },
+        {
+          "issue": 114,
+          "title": "Calculate and save the first real job",
+          "task": 6,
+          "section": "### Task 6: Calculate and save the first real job",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            108,
+            111
+          ]
+        }
+      ]
+    },
+    {
+      "key": "run-editing",
+      "issue": 46,
+      "title": "Edit and durably save measured runs",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-run-editing.md",
+      "blockedBy": [
+        45
+      ],
+      "children": [
+        {
+          "issue": 103,
+          "title": "Edit measured runs and explicit connections",
+          "task": 1,
+          "section": "### Task 1: Edit measured runs and explicit connections",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 106,
+          "title": "Serialize writes and preserve the latest edit generation",
+          "task": 2,
+          "section": "### Task 2: Serialize writes and preserve the latest edit generation",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 109,
+          "title": "Expose save retry and safe navigation",
+          "task": 3,
+          "section": "### Task 3: Expose save retry and safe navigation",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            103,
+            106
+          ]
+        }
+      ]
+    },
+    {
+      "key": "estimates",
+      "issue": 47,
+      "title": "Calculate and explicitly reprice saved estimates",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+      "blockedBy": [
+        46,
+        44
+      ],
+      "children": [
+        {
+          "issue": 110,
+          "title": "Edit explicit manual allowances",
+          "task": 1,
+          "section": "### Task 1: Edit explicit manual allowances",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 113,
+          "title": "Edit and clear segment selling adjustments",
+          "task": 2,
+          "section": "### Task 2: Edit and clear segment selling adjustments",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 116,
+          "title": "Track canonical calculation freshness",
+          "task": 3,
+          "section": "### Task 3: Track canonical calculation freshness",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 119,
+          "title": "Display internal estimate explanations",
+          "task": 4,
+          "section": "### Task 4: Display internal estimate explanations",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 120,
+          "title": "Review and accept explicit repricing changes",
+          "task": 5,
+          "section": "### Task 5: Review and accept explicit repricing changes",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            110,
+            113,
+            116,
+            119
+          ]
+        }
+      ]
+    },
+    {
+      "key": "quotes",
+      "issue": 48,
+      "title": "Preserve presented quotes",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+      "blockedBy": [
+        47
+      ],
+      "children": [
+        {
+          "issue": 112,
+          "title": "Define quote content and stable fingerprints",
+          "task": 1,
+          "section": "### Task 1: Define quote content and stable fingerprints",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 115,
+          "title": "Persist immutable snapshots exactly once",
+          "task": 2,
+          "section": "### Task 2: Persist immutable snapshots exactly once",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            112
+          ]
+        },
+        {
+          "issue": 118,
+          "title": "Freeze only current complete production calculations",
+          "task": 3,
+          "section": "### Task 3: Freeze only current complete production calculations",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            112
+          ]
+        },
+        {
+          "issue": 122,
+          "title": "Present a durably saved quote snapshot",
+          "task": 4,
+          "section": "### Task 4: Present a durably saved quote snapshot",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            115,
+            118
+          ]
+        },
+        {
+          "issue": 124,
+          "title": "Reopen quote history without changing original bytes",
+          "task": 5,
+          "section": "### Task 5: Reopen quote history without changing original bytes",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "key": "proposals",
+      "issue": 49,
+      "title": "Export customer-safe proposals",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-proposals.md",
+      "blockedBy": [
+        48
+      ],
+      "children": [
+        {
+          "issue": 117,
+          "title": "Project frozen quotes into the strict customer model",
+          "task": 1,
+          "section": "### Task 1: Project frozen quotes into the strict customer model",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 121,
+          "title": "Render wrapped and paginated proposal PDFs",
+          "task": 2,
+          "section": "### Task 2: Render wrapped and paginated proposal PDFs",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            117
+          ]
+        },
+        {
+          "issue": 123,
+          "title": "Display proposals from retained customer models",
+          "task": 3,
+          "section": "### Task 3: Display proposals from retained customer models",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            117
+          ]
+        },
+        {
+          "issue": 126,
+          "title": "Export and inspect frozen proposal files",
+          "task": 4,
+          "section": "### Task 4: Export and inspect frozen proposal files",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            121,
+            123
+          ]
+        }
+      ]
+    },
+    {
+      "key": "attachments",
+      "issue": 50,
+      "title": "Retain job and receipt evidence",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-attachments.md",
+      "blockedBy": [
+        45,
+        40
+      ],
+      "children": [
+        {
+          "issue": 125,
+          "title": "Store verified immutable attachment files",
+          "task": 1,
+          "section": "### Task 1: Store verified immutable attachment files",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 128,
+          "title": "Upload and download evidence through bounded routes",
+          "task": 2,
+          "section": "### Task 2: Upload and download evidence through bounded routes",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            125
+          ]
+        },
+        {
+          "issue": 131,
+          "title": "Attach and reopen owner-selected evidence",
+          "task": 3,
+          "section": "### Task 3: Attach and reopen owner-selected evidence",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            128
+          ]
+        }
+      ]
+    },
+    {
+      "key": "backup-capture",
+      "issue": 51,
+      "title": "Create verified office backups",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-capture.md",
+      "blockedBy": [
+        50,
+        39
+      ],
+      "children": [
+        {
+          "issue": 127,
+          "title": "Define the complete current backup inventory",
+          "task": 1,
+          "section": "### Task 1: Define the complete current backup inventory",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 130,
+          "title": "Capture a consistent database and file backup",
+          "task": 2,
+          "section": "### Task 2: Capture a consistent database and file backup",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            127
+          ]
+        },
+        {
+          "issue": 133,
+          "title": "Choose destinations and report verified backup status",
+          "task": 3,
+          "section": "### Task 3: Choose destinations and report verified backup status",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            130
+          ]
+        }
+      ]
+    },
+    {
+      "key": "backup-restore",
+      "issue": 52,
+      "title": "Restore office work safely",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-restore.md",
+      "blockedBy": [
+        51
+      ],
+      "children": [
+        {
+          "issue": 129,
+          "title": "Validate every backup artifact before restore",
+          "task": 1,
+          "section": "### Task 1: Validate every backup artifact before restore",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 132,
+          "title": "Restore through staging and preserve the old directory",
+          "task": 2,
+          "section": "### Task 2: Restore through staging and preserve the old directory",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            129
+          ]
+        },
+        {
+          "issue": 135,
+          "title": "Prove identity and evidence preservation after restore",
+          "task": 3,
+          "section": "### Task 3: Prove identity and evidence preservation after restore",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            132
+          ]
+        }
+      ]
+    },
+    {
+      "key": "catalog-release",
+      "issue": 53,
+      "title": "Prepare private field catalogs",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+      "blockedBy": [
+        49,
+        52
+      ],
+      "children": [
+        {
+          "issue": 134,
+          "title": "Encrypt independently versioned catalog modules",
+          "task": 1,
+          "section": "### Task 1: Encrypt independently versioned catalog modules",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 137,
+          "title": "Preserve published module and release identities",
+          "task": 2,
+          "section": "### Task 2: Preserve published module and release identities",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            134
+          ]
+        },
+        {
+          "issue": 139,
+          "title": "Stage only verified public release artifacts",
+          "task": 3,
+          "section": "### Task 3: Stage only verified public release artifacts",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            134
+          ]
+        },
+        {
+          "issue": 142,
+          "title": "Keep credentials local and generate enrollment explicitly",
+          "task": 4,
+          "section": "### Task 4: Keep credentials local and generate enrollment explicitly",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            134
+          ]
+        },
+        {
+          "issue": 145,
+          "title": "Preview the release and selected current-pack removal",
+          "task": 5,
+          "section": "### Task 5: Preview the release and selected current-pack removal",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            137,
+            139,
+            142
+          ]
+        }
+      ]
+    },
+    {
+      "key": "field-visits",
+      "issue": 54,
+      "title": "Save field site visits",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+      "blockedBy": [
+        55,
+        49,
+        46
+      ],
+      "children": [
+        {
+          "issue": 136,
+          "title": "Persist real field draft snapshots independently of keys",
+          "task": 1,
+          "section": "### Task 1: Persist real field draft snapshots independently of keys",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 140,
+          "title": "Edit field customer job and run inputs",
+          "task": 2,
+          "section": "### Task 2: Edit field customer job and run inputs",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            136
+          ]
+        },
+        {
+          "issue": 143,
+          "title": "Calculate enrolled field work with exact Mac parity",
+          "task": 3,
+          "section": "### Task 3: Calculate enrolled field work with exact Mac parity",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            140
+          ]
+        },
+        {
+          "issue": 146,
+          "title": "Preserve newer field edits in the write queue",
+          "task": 4,
+          "section": "### Task 4: Preserve newer field edits in the write queue",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            136
+          ]
+        },
+        {
+          "issue": 150,
+          "title": "Report field save failure and flush before navigation",
+          "task": 5,
+          "section": "### Task 5: Report field save failure and flush before navigation",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            140,
+            143,
+            146
+          ]
+        },
+        {
+          "issue": 152,
+          "title": "Reopen field visits and report actual storage persistence",
+          "task": 6,
+          "section": "### Task 6: Reopen field visits and report actual storage persistence",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            150
+          ]
+        }
+      ]
+    },
+    {
+      "key": "registration",
+      "issue": 55,
+      "title": "Register a device and install its first catalog",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+      "blockedBy": [
+        53,
+        37
+      ],
+      "children": [
+        {
+          "issue": 138,
+          "title": "Validate enrollment without replacing active registration",
+          "task": 1,
+          "section": "### Task 1: Validate enrollment without replacing active registration",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 141,
+          "title": "Commit registration and catalog activation atomically",
+          "task": 2,
+          "section": "### Task 2: Commit registration and catalog activation atomically",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            138
+          ]
+        },
+        {
+          "issue": 144,
+          "title": "Validate and decrypt complete catalog modules before install",
+          "task": 3,
+          "section": "### Task 3: Validate and decrypt complete catalog modules before install",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            141
+          ]
+        },
+        {
+          "issue": 147,
+          "title": "Read camera and selected-image QR credentials",
+          "task": 4,
+          "section": "### Task 4: Read camera and selected-image QR credentials",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            138
+          ]
+        },
+        {
+          "issue": 148,
+          "title": "Recover enrollment input after denied camera permission",
+          "task": 5,
+          "section": "### Task 5: Recover enrollment input after denied camera permission",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            147
+          ]
+        },
+        {
+          "issue": 151,
+          "title": "Display catalog design and activation status",
+          "task": 6,
+          "section": "### Task 6: Display catalog design and activation status",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            144
+          ]
+        },
+        {
+          "issue": 155,
+          "title": "Expose the read-only field conformance action",
+          "task": 7,
+          "section": "### Task 7: Expose the read-only field conformance action",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            151
+          ]
+        }
+      ]
+    },
+    {
+      "key": "catalog-refresh",
+      "issue": 56,
+      "title": "Refresh catalogs and rotate keys safely",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-refresh.md",
+      "blockedBy": [
+        55
+      ],
+      "children": [
+        {
+          "issue": 149,
+          "title": "Reuse unchanged modules and retain active data on failure",
+          "task": 1,
+          "section": "### Task 1: Reuse unchanged modules and retain active data on failure",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 153,
+          "title": "Promote a pending key only with a valid matching release",
+          "task": 2,
+          "section": "### Task 2: Promote a pending key only with a valid matching release",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 156,
+          "title": "Schedule single-flight foreground catalog checks",
+          "task": 3,
+          "section": "### Task 3: Schedule single-flight foreground catalog checks",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 159,
+          "title": "Explain refresh and registration status accurately",
+          "task": 4,
+          "section": "### Task 4: Explain refresh and registration status accurately",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            149,
+            153,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "key": "field-quotes",
+      "issue": 57,
+      "title": "Present retained field quotes",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-quotes.md",
+      "blockedBy": [
+        54,
+        55,
+        49
+      ],
+      "children": [
+        {
+          "issue": 154,
+          "title": "Enter field allowances and selling adjustments",
+          "task": 1,
+          "section": "### Task 1: Enter field allowances and selling adjustments",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 157,
+          "title": "Freeze durable Preliminary field snapshots",
+          "task": 2,
+          "section": "### Task 2: Freeze durable Preliminary field snapshots",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 162,
+          "title": "Export the shared customer-safe field PDF",
+          "task": 3,
+          "section": "### Task 3: Export the shared customer-safe field PDF",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 165,
+          "title": "Present retained quotes after explicit repricing",
+          "task": 4,
+          "section": "### Task 4: Present retained quotes after explicit repricing",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            154,
+            157,
+            162
+          ]
+        }
+      ]
+    },
+    {
+      "key": "field-returns",
+      "issue": 58,
+      "title": "Return immutable field submissions",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-returns.md",
+      "blockedBy": [
+        57
+      ],
+      "children": [
+        {
+          "issue": 158,
+          "title": "Build strict self-contained field packages",
+          "task": 1,
+          "section": "### Task 1: Build strict self-contained field packages",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 161,
+          "title": "Persist immutable outbox records before sharing",
+          "task": 2,
+          "section": "### Task 2: Persist immutable outbox records before sharing",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            158
+          ]
+        },
+        {
+          "issue": 164,
+          "title": "Share JSON or download it truthfully",
+          "task": 3,
+          "section": "### Task 3: Share JSON or download it truthfully",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            158
+          ]
+        },
+        {
+          "issue": 168,
+          "title": "Retry saved submissions and confirm receipt explicitly",
+          "task": 4,
+          "section": "### Task 4: Retry saved submissions and confirm receipt explicitly",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            161,
+            164
+          ]
+        }
+      ]
+    },
+    {
+      "key": "import-review",
+      "issue": 59,
+      "title": "Review returned field work in the office",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-review.md",
+      "blockedBy": [
+        58,
+        45
+      ],
+      "children": [
+        {
+          "issue": 160,
+          "title": "Validate received attachments before review",
+          "task": 1,
+          "section": "### Task 1: Validate received attachments before review",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 163,
+          "title": "Read existing source mappings without name-based merging",
+          "task": 2,
+          "section": "### Task 2: Read existing source mappings without name-based merging",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            160
+          ]
+        },
+        {
+          "issue": 166,
+          "title": "Explain identity and base-revision conflicts",
+          "task": 3,
+          "section": "### Task 3: Explain identity and base-revision conflicts",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            160
+          ]
+        },
+        {
+          "issue": 169,
+          "title": "Review source values and office target choices",
+          "task": 4,
+          "section": "### Task 4: Review source values and office target choices",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            163,
+            166
+          ]
+        }
+      ]
+    },
+    {
+      "key": "import-accept",
+      "issue": 60,
+      "title": "Accept reviewed field submissions exactly once",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-accept.md",
+      "blockedBy": [
+        59
+      ],
+      "children": [
+        {
+          "issue": 167,
+          "title": "Commit import receipts and mappings together",
+          "task": 1,
+          "section": "### Task 1: Commit import receipts and mappings together",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 171,
+          "title": "Apply reviewed drafts while retaining original quote links",
+          "task": 2,
+          "section": "### Task 2: Apply reviewed drafts while retaining original quote links",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            167
+          ]
+        },
+        {
+          "issue": 174,
+          "title": "Require renewed review after context changes",
+          "task": 3,
+          "section": "### Task 3: Require renewed review after context changes",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            167
+          ]
+        },
+        {
+          "issue": 176,
+          "title": "Accept replayed and delayed submissions through the office UI",
+          "task": 4,
+          "section": "### Task 4: Accept replayed and delayed submissions through the office UI",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            171,
+            174
+          ]
+        }
+      ]
+    },
+    {
+      "key": "office-recovery",
+      "issue": 61,
+      "title": "Recover catalog and imported office evidence",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-office-recovery.md",
+      "blockedBy": [
+        52,
+        53,
+        60
+      ],
+      "children": [
+        {
+          "issue": 170,
+          "title": "Verify current archive and key backup coverage",
+          "task": 1,
+          "section": "### Task 1: Verify current archive and key backup coverage",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 173,
+          "title": "Restore import mappings links and duplicate receipts",
+          "task": 2,
+          "section": "### Task 2: Restore import mappings links and duplicate receipts",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 177,
+          "title": "Verify the complete current office restore",
+          "task": 3,
+          "section": "### Task 3: Verify the complete current office restore",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            170,
+            173
+          ]
+        }
+      ]
+    },
+    {
+      "key": "offline-shell",
+      "issue": 62,
+      "title": "Launch the field application without network",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-offline-shell.md",
+      "blockedBy": [
+        55,
+        57,
+        58
+      ],
+      "children": [
+        {
+          "issue": 172,
+          "title": "Generate exact versioned app-shell asset metadata",
+          "task": 1,
+          "section": "### Task 1: Generate exact versioned app-shell asset metadata",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 175,
+          "title": "Cache only the versioned application shell",
+          "task": 2,
+          "section": "### Task 2: Cache only the versioned application shell",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            172
+          ]
+        },
+        {
+          "issue": 179,
+          "title": "Register the production worker without reloading edits",
+          "task": 3,
+          "section": "### Task 3: Register the production worker without reloading edits",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            175
+          ]
+        },
+        {
+          "issue": 181,
+          "title": "Cold-open retained work and PDF output offline",
+          "task": 4,
+          "section": "### Task 4: Cold-open retained work and PDF output offline",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            179
+          ]
+        }
+      ]
+    },
+    {
+      "key": "app-upgrades",
+      "issue": 63,
+      "title": "Upgrade the field app without losing work",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-app-upgrades.md",
+      "blockedBy": [
+        62,
+        56,
+        58
+      ],
+      "children": [
+        {
+          "issue": 178,
+          "title": "Check waiting-release and stored-data compatibility",
+          "task": 1,
+          "section": "### Task 1: Check waiting-release and stored-data compatibility",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 182,
+          "title": "Defer activation until edits are durably saved",
+          "task": 2,
+          "section": "### Task 2: Defer activation until edits are durably saved",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            178
+          ]
+        },
+        {
+          "issue": 185,
+          "title": "Keep the prior shell until replacement boot succeeds",
+          "task": 3,
+          "section": "### Task 3: Keep the prior shell until replacement boot succeeds",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            178
+          ]
+        },
+        {
+          "issue": 189,
+          "title": "Rehearse genuinely different preserved-store releases",
+          "task": 4,
+          "section": "### Task 4: Rehearse genuinely different preserved-store releases",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            182,
+            185
+          ]
+        }
+      ]
+    },
+    {
+      "key": "field-recovery",
+      "issue": 65,
+      "title": "Recover field work after storage loss",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-recovery.md",
+      "blockedBy": [
+        58
+      ],
+      "children": [
+        {
+          "issue": 180,
+          "title": "Export self-contained work without catalog credentials",
+          "task": 1,
+          "section": "### Task 1: Export self-contained work without catalog credentials",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": []
+        },
+        {
+          "issue": 183,
+          "title": "Preview recovery identity conflicts without writes",
+          "task": 2,
+          "section": "### Task 2: Preview recovery identity conflicts without writes",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            180
+          ]
+        },
+        {
+          "issue": 186,
+          "title": "Restore reviewed rows in one rechecked transaction",
+          "task": 3,
+          "section": "### Task 3: Restore reviewed rows in one rechecked transaction",
+          "hours": 4,
+          "size": "S",
+          "blockedBy": [
+            180
+          ]
+        },
+        {
+          "issue": 188,
+          "title": "Recover into a separate profile and reenroll explicitly",
+          "task": 4,
+          "section": "### Task 4: Recover into a separate profile and reenroll explicitly",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            183,
+            186
+          ]
+        }
+      ]
+    },
+    {
+      "key": "qualification",
+      "issue": 64,
+      "title": "Qualify the complete owner trial",
+      "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+      "blockedBy": [
+        61,
+        63,
+        65,
+        56
+      ],
+      "children": [
+        {
+          "issue": 184,
+          "title": "Prepare exact-release conformance inputs and records",
+          "task": 1,
+          "section": "### Task 1: Prepare exact-release conformance inputs and records",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": []
+        },
+        {
+          "issue": 187,
+          "title": "Verify iPhone offline calculations and customer output",
+          "task": 2,
+          "section": "### Task 2: Verify iPhone offline calculations and customer output",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            184
+          ]
+        },
+        {
+          "issue": 190,
+          "title": "Verify iPad offline calculations and customer output",
+          "task": 3,
+          "section": "### Task 3: Verify iPad offline calculations and customer output",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            184
+          ]
+        },
+        {
+          "issue": 191,
+          "title": "Verify real Mac quote history and explicit repricing",
+          "task": 4,
+          "section": "### Task 4: Verify real Mac quote history and explicit repricing",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            184
+          ]
+        },
+        {
+          "issue": 192,
+          "title": "Verify iPhone enrollment and key rotation",
+          "task": 5,
+          "section": "### Task 5: Verify iPhone enrollment and key rotation",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            187,
+            190
+          ]
+        },
+        {
+          "issue": 193,
+          "title": "Verify iPad enrollment and key rotation",
+          "task": 6,
+          "section": "### Task 6: Verify iPad enrollment and key rotation",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            192
+          ]
+        },
+        {
+          "issue": 194,
+          "title": "Verify iPhone dirty clean and offline app upgrades",
+          "task": 7,
+          "section": "### Task 7: Verify iPhone dirty clean and offline app upgrades",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            193
+          ]
+        },
+        {
+          "issue": 195,
+          "title": "Verify iPad dirty clean and offline app upgrades",
+          "task": 8,
+          "section": "### Task 8: Verify iPad dirty clean and offline app upgrades",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            194
+          ]
+        },
+        {
+          "issue": 196,
+          "title": "Verify actual iPhone sharing and reviewed office return",
+          "task": 9,
+          "section": "### Task 9: Verify actual iPhone sharing and reviewed office return",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            195
+          ]
+        },
+        {
+          "issue": 197,
+          "title": "Verify actual iPad sharing and reviewed office return",
+          "task": 10,
+          "section": "### Task 10: Verify actual iPad sharing and reviewed office return",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            196
+          ]
+        },
+        {
+          "issue": 198,
+          "title": "Verify isolated Mac restore and delayed plaintext import",
+          "task": 11,
+          "section": "### Task 11: Verify isolated Mac restore and delayed plaintext import",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            191,
+            197
+          ]
+        },
+        {
+          "issue": 199,
+          "title": "Verify field recovery in separate test profiles",
+          "task": 12,
+          "section": "### Task 12: Verify field recovery in separate test profiles",
+          "hours": 3,
+          "size": "S",
+          "blockedBy": [
+            198
+          ]
+        },
+        {
+          "issue": 200,
+          "title": "Reconcile the eleven-case acceptance ledger",
+          "task": 13,
+          "section": "### Task 13: Reconcile the eleven-case acceptance ledger",
+          "hours": 2,
+          "size": "XS",
+          "blockedBy": [
+            187,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199
+          ]
+        }
+      ]
+    }
+  ],
+  "legacyMapping": {
+    "1": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        37,
+        40,
+        39,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        65,
+        64
+      ]
+    },
+    "2": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        37
+      ]
+    },
+    "3": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        41
+      ]
+    },
+    "4": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        41,
+        42
+      ]
+    },
+    "5": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        40,
+        39
+      ]
+    },
+    "6": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        43
+      ]
+    },
+    "7": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        44
+      ]
+    },
+    "8": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        44
+      ]
+    },
+    "9": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        40,
+        39,
+        45,
+        42
+      ]
+    },
+    "10": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        37,
+        45
+      ]
+    },
+    "11": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        50
+      ]
+    },
+    "12": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        40,
+        39,
+        42
+      ]
+    },
+    "13": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        45,
+        46,
+        47,
+        50
+      ]
+    },
+    "14": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        46,
+        47
+      ]
+    },
+    "15": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        48
+      ]
+    },
+    "16": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        49
+      ]
+    },
+    "17": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        53
+      ]
+    },
+    "18": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        53
+      ]
+    },
+    "19": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        53
+      ]
+    },
+    "20": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        37,
+        55,
+        54
+      ]
+    },
+    "21": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        54,
+        57
+      ]
+    },
+    "22": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        55,
+        54,
+        57
+      ]
+    },
+    "23": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        55
+      ]
+    },
+    "24": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        55,
+        56
+      ]
+    },
+    "25": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        55,
+        56
+      ]
+    },
+    "26": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        58
+      ]
+    },
+    "27": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        59,
+        60
+      ]
+    },
+    "28": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        58,
+        59,
+        60
+      ]
+    },
+    "29": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        51,
+        52,
+        61
+      ]
+    },
+    "30": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        65
+      ]
+    },
+    "31": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        62
+      ]
+    },
+    "32": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        63
+      ]
+    },
+    "33": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        37,
+        44,
+        55,
+        53,
+        62,
+        64
+      ]
+    },
+    "34": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        64
+      ]
+    },
+    "35": {
+      "supersededBy": 36,
+      "scopeEpicIssues": [
+        64
+      ]
+    }
+  },
+  "migration": {
+    "status": "verified",
+    "completedAt": "2026-11-02T06:23:35.798973+00:00",
+    "legacyDisposition": "Replaced",
+    "legacyStateReason": "not_planned",
+    "preRetirementReceiptSHA256": "e4abde83c94d91c98e0670f6c2dd81cf32cff01eb6ddcb4da55e070137fb6a66",
+    "finalReceiptSHA256": "2dcb41fc2db56d14c50d57a8652b4d96ae6fc1c9fdfb98a4df11d82c37bcc0ab"
+  }
+}

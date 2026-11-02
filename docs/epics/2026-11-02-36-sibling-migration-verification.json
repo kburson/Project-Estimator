@@ -1,0 +1,103 @@
+{
+  "schema": "project-estimator.sibling-migration-verification/v1",
+  "success": true,
+  "completedAt": "2026-11-02T06:23:35.798973+00:00",
+  "repository": "kburson/Project-Estimator",
+  "projectNumber": 23,
+  "index": 36,
+  "sourcePlanCommit": "a1f4a7bcefb82e5499219f33c34aed280c76bceb",
+  "rootSiblingEpics": 28,
+  "childStories": 135,
+  "childForecastHours": {
+    "min": 2,
+    "max": 4,
+    "total": 401,
+    "meanRounded": 2.97
+  },
+  "childSizes": [
+    "XS",
+    "S"
+  ],
+  "legacyIssues": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ],
+  "legacyState": "CLOSED",
+  "legacyStateReason": "NOT_PLANNED",
+  "legacyBoardStatus": "Done",
+  "legacyDisposition": "Replaced",
+  "historicalParentLinksRetained": true,
+  "indexHasParentChildrenOrBlockingRole": false,
+  "duplicateCorrection": {
+    "retired": 75,
+    "canonical": 76,
+    "stateReason": "NOT_PLANNED",
+    "disposition": "Replaced"
+  },
+  "preRetirement": {
+    "success": true,
+    "completedAt": "2026-11-02T05:27:55.998061+00:00",
+    "receiptSHA256": "e4abde83c94d91c98e0670f6c2dd81cf32cff01eb6ddcb4da55e070137fb6a66"
+  },
+  "final": {
+    "success": true,
+    "receiptSHA256": "2dcb41fc2db56d14c50d57a8652b4d96ae6fc1c9fdfb98a4df11d82c37bcc0ab",
+    "snapshotSHA256": "96fe5dd027ef3a00a63e476d13b2bda4aa5b5edfde0e50a77ddd87c1369ad9da",
+    "expectedGraphSHA256": "ce3d3fee403c8e834d3677c6bfae28ba73537e29340f092214a17034271cf2c7"
+  },
+  "originalReviewedHashes": {
+    "docs/superpowers/specs/2026-11-01-project-estimator-pwa-v1-design.md": "0971e6426aadf888a3652d9fae78707793f4af7f4b221e5b577ef8deca253f2c",
+    "docs/superpowers/plans/2026-11-01-first-usable-project-estimator.md": "fb0601ece98e4f7af05a26cabcaeccbf5f33dd386e21d00215f0a1bedc2ad6f6"
+  },
+  "issueMapJSONSHA256": "bd1c58577330940acc02ba3116fe91ab52a83b2ad55a090f3f4f13d010d99982",
+  "ownedIssueMapComment": "https://github.com/kburson/Project-Estimator/issues/36#issuecomment-6569827777",
+  "applicationImplementationPerformed": false,
+  "applicationBuildDeploymentOrAcceptanceAsserted": false,
+  "metadataPublication": "local-only; private setup ancestry not pushed",
+  "limitations": [
+    "Quiescent sequential GitHub observations, not a transaction.",
+    "Intake forecasts are not refinement approval, elapsed delivery dates or product verification.",
+    "Raw local audit snapshots are retained under .scratch and not automatically published."
+  ],
+  "administrativeCleanup": {
+    "temporaryWorktreesArchived": 3,
+    "trackedTreesClean": true,
+    "configurationsUnchanged": true,
+    "pendingTimingRowsAtArchive": 0,
+    "ignoredWorkflowAuditStatePreservedLocally": true,
+    "mainAndOriginalWorktreePreserved": true
+  }
+}

@@ -1,0 +1,2350 @@
+{
+  "37": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Deliver the first office and field builds",
+    "parent": null,
+    "children": [
+      38,
+      68,
+      69,
+      72,
+      77,
+      79,
+      82,
+      85
+    ],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "kind": "epic",
+    "key": "foundation"
+  },
+  "38": {
+    "title": "Pin the workspace while retaining AITM",
+    "parent": 37,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 1: Pin the workspace while retaining AITM",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "68": {
+    "title": "Validate exact run and measured-length inputs",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      38
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 2: Validate exact run and measured-length inputs",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "69": {
+    "title": "Build and launch the loopback office shell",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      38
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 3: Build and launch the loopback office shell",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "72": {
+    "title": "Export the static field application shell",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      38
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 4: Export the static field application shell",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "77": {
+    "title": "Stage only public application assets",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      72
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 5: Stage only public application assets",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "79": {
+    "title": "Configure trunk-triggered Cloudflare delivery",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      77
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 6: Configure trunk-triggered Cloudflare delivery",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "82": {
+    "title": "Configure trunk-triggered local server builds",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      69
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 7: Configure trunk-triggered local server builds",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "85": {
+    "title": "Rehearse candidate delivery before the first trunk merge",
+    "parent": 37,
+    "children": [],
+    "deps": [
+      68,
+      79,
+      82
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-foundation.md",
+    "section": "### Task 8: Rehearse candidate delivery before the first trunk merge",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "foundation"
+  },
+  "40": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Maintain vendor and component identities",
+    "parent": null,
+    "children": [
+      67,
+      70,
+      73,
+      76,
+      80
+    ],
+    "deps": [
+      37
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+    "kind": "epic",
+    "key": "catalog"
+  },
+  "67": {
+    "title": "Store validated catalog identities",
+    "parent": 40,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+    "section": "### Task 1: Store validated catalog identities",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog"
+  },
+  "70": {
+    "title": "Edit vendors and component specifications",
+    "parent": 40,
+    "children": [],
+    "deps": [
+      67
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+    "section": "### Task 2: Edit vendors and component specifications",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog"
+  },
+  "73": {
+    "title": "Edit explicitly identified vendor offers",
+    "parent": 40,
+    "children": [],
+    "deps": [
+      67
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+    "section": "### Task 3: Edit explicitly identified vendor offers",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog"
+  },
+  "76": {
+    "title": "Reject changes to referenced economic context",
+    "parent": 40,
+    "children": [],
+    "deps": [
+      67
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+    "section": "### Task 4: Reject changes to referenced economic context",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "catalog"
+  },
+  "80": {
+    "title": "Create replacement identities for economic edits",
+    "parent": 40,
+    "children": [],
+    "deps": [
+      70,
+      73,
+      76
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog.md",
+    "section": "### Task 5: Create replacement identities for economic edits",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "catalog"
+  },
+  "39": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Keep dated prices and deliberate business settings",
+    "parent": null,
+    "children": [
+      66,
+      71,
+      74,
+      78
+    ],
+    "deps": [
+      40
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-prices.md",
+    "kind": "epic",
+    "key": "prices"
+  },
+  "66": {
+    "title": "Append and correct immutable price observations",
+    "parent": 39,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-prices.md",
+    "section": "### Task 1: Append and correct immutable price observations",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "prices"
+  },
+  "71": {
+    "title": "Enter known prices and permitted arrangements",
+    "parent": 39,
+    "children": [],
+    "deps": [
+      66
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-prices.md",
+    "section": "### Task 2: Enter known prices and permitted arrangements",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "prices"
+  },
+  "74": {
+    "title": "Require explicit business labor markup and tax decisions",
+    "parent": 39,
+    "children": [],
+    "deps": [
+      66
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-prices.md",
+    "section": "### Task 3: Require explicit business labor markup and tax decisions",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "prices"
+  },
+  "78": {
+    "title": "Choose defaults and inspect dated corrections",
+    "parent": 39,
+    "children": [],
+    "deps": [
+      71,
+      74
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-prices.md",
+    "section": "### Task 4: Choose defaults and inspect dated corrections",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "prices"
+  },
+  "41": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Explain bays and shared posts",
+    "parent": null,
+    "children": [
+      81,
+      84,
+      86,
+      89
+    ],
+    "deps": [
+      37
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-bays.md",
+    "kind": "epic",
+    "key": "bays"
+  },
+  "81": {
+    "title": "Record the owner single-recipe decision",
+    "parent": 41,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-bays.md",
+    "section": "### Task 1: Record the owner single-recipe decision",
+    "hours": 2,
+    "size": "XS",
+    "kind": "docs-only",
+    "key": "bays"
+  },
+  "84": {
+    "title": "Validate versioned recipe rules",
+    "parent": 41,
+    "children": [],
+    "deps": [
+      81
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-bays.md",
+    "section": "### Task 2: Validate versioned recipe rules",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "bays"
+  },
+  "86": {
+    "title": "Calculate exact bays and unique post identities",
+    "parent": 41,
+    "children": [],
+    "deps": [
+      84
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-bays.md",
+    "section": "### Task 3: Calculate exact bays and unique post identities",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "bays"
+  },
+  "89": {
+    "title": "Inspect geometry and named invalid inputs",
+    "parent": 41,
+    "children": [],
+    "deps": [
+      86
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-bays.md",
+    "section": "### Task 4: Inspect geometry and named invalid inputs",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "bays"
+  },
+  "42": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Explain material cuts and stock requirements",
+    "parent": null,
+    "children": [
+      83,
+      87,
+      90,
+      93,
+      96
+    ],
+    "deps": [
+      40,
+      41
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+    "kind": "epic",
+    "key": "requirements"
+  },
+  "83": {
+    "title": "Retain owner-validated recipe versions",
+    "parent": 42,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+    "section": "### Task 1: Retain owner-validated recipe versions",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "requirements"
+  },
+  "87": {
+    "title": "Derive installed material requirements",
+    "parent": 42,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+    "section": "### Task 2: Derive installed material requirements",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "requirements"
+  },
+  "90": {
+    "title": "Retain cuts and conservative stock use",
+    "parent": 42,
+    "children": [],
+    "deps": [
+      87
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+    "section": "### Task 3: Retain cuts and conservative stock use",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "requirements"
+  },
+  "93": {
+    "title": "Count fasteners from installed pieces",
+    "parent": 42,
+    "children": [],
+    "deps": [
+      87
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+    "section": "### Task 4: Count fasteners from installed pieces",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "requirements"
+  },
+  "96": {
+    "title": "Explain requirements and unused stock",
+    "parent": 42,
+    "children": [],
+    "deps": [
+      83,
+      90,
+      93
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-requirements.md",
+    "section": "### Task 5: Explain requirements and unused stock",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "requirements"
+  },
+  "43": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Explain purchased packs and eligible prices",
+    "parent": null,
+    "children": [
+      88,
+      92,
+      94,
+      97,
+      100
+    ],
+    "deps": [
+      39,
+      42
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+    "kind": "epic",
+    "key": "purchases"
+  },
+  "88": {
+    "title": "Pool requirements before package rounding",
+    "parent": 43,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+    "section": "### Task 1: Pool requirements before package rounding",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "purchases"
+  },
+  "92": {
+    "title": "Select only permitted pricing arrangements",
+    "parent": 43,
+    "children": [],
+    "deps": [
+      88
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+    "section": "### Task 2: Select only permitted pricing arrangements",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "purchases"
+  },
+  "94": {
+    "title": "Extend tax-inclusive costs and allocate cents",
+    "parent": 43,
+    "children": [],
+    "deps": [
+      88
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+    "section": "### Task 3: Extend tax-inclusive costs and allocate cents",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "purchases"
+  },
+  "97": {
+    "title": "Compose purchase provenance and named failures",
+    "parent": 43,
+    "children": [],
+    "deps": [
+      92,
+      94
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+    "section": "### Task 4: Compose purchase provenance and named failures",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "purchases"
+  },
+  "100": {
+    "title": "Inspect pack spares and selected-price provenance",
+    "parent": 43,
+    "children": [],
+    "deps": [
+      97
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-purchases.md",
+    "section": "### Task 5: Inspect pack spares and selected-price provenance",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "purchases"
+  },
+  "44": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Calculate complete segment costs",
+    "parent": null,
+    "children": [
+      91,
+      95,
+      98,
+      101,
+      104,
+      107
+    ],
+    "deps": [
+      43
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "kind": "epic",
+    "key": "costs"
+  },
+  "91": {
+    "title": "Define estimate inputs and production readiness",
+    "parent": 44,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "section": "### Task 1: Define estimate inputs and production readiness",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "costs"
+  },
+  "95": {
+    "title": "Attribute materials and person-hour costs once",
+    "parent": 44,
+    "children": [],
+    "deps": [
+      91
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "section": "### Task 2: Attribute materials and person-hour costs once",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "costs"
+  },
+  "98": {
+    "title": "Cost manual work without inventing geometry or hours",
+    "parent": 44,
+    "children": [],
+    "deps": [
+      91
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "section": "### Task 3: Cost manual work without inventing geometry or hours",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "costs"
+  },
+  "101": {
+    "title": "Apply segment selling rules and customer tax",
+    "parent": 44,
+    "children": [],
+    "deps": [
+      91
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "section": "### Task 4: Apply segment selling rules and customer tax",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "costs"
+  },
+  "104": {
+    "title": "Compose complete and incomplete estimate results",
+    "parent": 44,
+    "children": [],
+    "deps": [
+      95,
+      98,
+      101
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "section": "### Task 5: Compose complete and incomplete estimate results",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "costs"
+  },
+  "107": {
+    "title": "Expose a read-only Mac conformance calculation",
+    "parent": 44,
+    "children": [],
+    "deps": [
+      104
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-costs.md",
+    "section": "### Task 6: Expose a read-only Mac conformance calculation",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "costs"
+  },
+  "45": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Save and reopen calculated site visits",
+    "parent": null,
+    "children": [
+      99,
+      102,
+      105,
+      108,
+      111,
+      114
+    ],
+    "deps": [
+      44
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "kind": "epic",
+    "key": "visits"
+  },
+  "99": {
+    "title": "Define validated customer and calculated-job persistence",
+    "parent": 45,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "section": "### Task 1: Define validated customer and calculated-job persistence",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "visits"
+  },
+  "102": {
+    "title": "Persist customer identities and contact history",
+    "parent": 45,
+    "children": [],
+    "deps": [
+      99
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "section": "### Task 2: Persist customer identities and contact history",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "visits"
+  },
+  "105": {
+    "title": "Persist and reopen calculated job snapshots",
+    "parent": 45,
+    "children": [],
+    "deps": [
+      102
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "section": "### Task 3: Persist and reopen calculated job snapshots",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "visits"
+  },
+  "108": {
+    "title": "Reject competing stale job revisions",
+    "parent": 45,
+    "children": [],
+    "deps": [
+      105
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "section": "### Task 4: Reject competing stale job revisions",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "visits"
+  },
+  "111": {
+    "title": "Edit customer and jobsite information",
+    "parent": 45,
+    "children": [],
+    "deps": [
+      102,
+      105
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "section": "### Task 5: Edit customer and jobsite information",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "visits"
+  },
+  "114": {
+    "title": "Calculate and save the first real job",
+    "parent": 45,
+    "children": [],
+    "deps": [
+      108,
+      111
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-visits.md",
+    "section": "### Task 6: Calculate and save the first real job",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "visits"
+  },
+  "46": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Edit and durably save measured runs",
+    "parent": null,
+    "children": [
+      103,
+      106,
+      109
+    ],
+    "deps": [
+      45
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-run-editing.md",
+    "kind": "epic",
+    "key": "run-editing"
+  },
+  "103": {
+    "title": "Edit measured runs and explicit connections",
+    "parent": 46,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-run-editing.md",
+    "section": "### Task 1: Edit measured runs and explicit connections",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "run-editing"
+  },
+  "106": {
+    "title": "Serialize writes and preserve the latest edit generation",
+    "parent": 46,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-run-editing.md",
+    "section": "### Task 2: Serialize writes and preserve the latest edit generation",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "run-editing"
+  },
+  "109": {
+    "title": "Expose save retry and safe navigation",
+    "parent": 46,
+    "children": [],
+    "deps": [
+      103,
+      106
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-run-editing.md",
+    "section": "### Task 3: Expose save retry and safe navigation",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "run-editing"
+  },
+  "47": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Calculate and explicitly reprice saved estimates",
+    "parent": null,
+    "children": [
+      110,
+      113,
+      116,
+      119,
+      120
+    ],
+    "deps": [
+      44,
+      46
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+    "kind": "epic",
+    "key": "estimates"
+  },
+  "110": {
+    "title": "Edit explicit manual allowances",
+    "parent": 47,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+    "section": "### Task 1: Edit explicit manual allowances",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "estimates"
+  },
+  "113": {
+    "title": "Edit and clear segment selling adjustments",
+    "parent": 47,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+    "section": "### Task 2: Edit and clear segment selling adjustments",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "estimates"
+  },
+  "116": {
+    "title": "Track canonical calculation freshness",
+    "parent": 47,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+    "section": "### Task 3: Track canonical calculation freshness",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "estimates"
+  },
+  "119": {
+    "title": "Display internal estimate explanations",
+    "parent": 47,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+    "section": "### Task 4: Display internal estimate explanations",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "estimates"
+  },
+  "120": {
+    "title": "Review and accept explicit repricing changes",
+    "parent": 47,
+    "children": [],
+    "deps": [
+      110,
+      113,
+      116,
+      119
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-estimates.md",
+    "section": "### Task 5: Review and accept explicit repricing changes",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "estimates"
+  },
+  "48": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Preserve presented quotes",
+    "parent": null,
+    "children": [
+      112,
+      115,
+      118,
+      122,
+      124
+    ],
+    "deps": [
+      47
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+    "kind": "epic",
+    "key": "quotes"
+  },
+  "112": {
+    "title": "Define quote content and stable fingerprints",
+    "parent": 48,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+    "section": "### Task 1: Define quote content and stable fingerprints",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "quotes"
+  },
+  "115": {
+    "title": "Persist immutable snapshots exactly once",
+    "parent": 48,
+    "children": [],
+    "deps": [
+      112
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+    "section": "### Task 2: Persist immutable snapshots exactly once",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "quotes"
+  },
+  "118": {
+    "title": "Freeze only current complete production calculations",
+    "parent": 48,
+    "children": [],
+    "deps": [
+      112
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+    "section": "### Task 3: Freeze only current complete production calculations",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "quotes"
+  },
+  "122": {
+    "title": "Present a durably saved quote snapshot",
+    "parent": 48,
+    "children": [],
+    "deps": [
+      115,
+      118
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+    "section": "### Task 4: Present a durably saved quote snapshot",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "quotes"
+  },
+  "124": {
+    "title": "Reopen quote history without changing original bytes",
+    "parent": 48,
+    "children": [],
+    "deps": [
+      122
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-quotes.md",
+    "section": "### Task 5: Reopen quote history without changing original bytes",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "quotes"
+  },
+  "49": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Export customer-safe proposals",
+    "parent": null,
+    "children": [
+      117,
+      121,
+      123,
+      126
+    ],
+    "deps": [
+      48
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-proposals.md",
+    "kind": "epic",
+    "key": "proposals"
+  },
+  "117": {
+    "title": "Project frozen quotes into the strict customer model",
+    "parent": 49,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-proposals.md",
+    "section": "### Task 1: Project frozen quotes into the strict customer model",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "proposals"
+  },
+  "121": {
+    "title": "Render wrapped and paginated proposal PDFs",
+    "parent": 49,
+    "children": [],
+    "deps": [
+      117
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-proposals.md",
+    "section": "### Task 2: Render wrapped and paginated proposal PDFs",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "proposals"
+  },
+  "123": {
+    "title": "Display proposals from retained customer models",
+    "parent": 49,
+    "children": [],
+    "deps": [
+      117
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-proposals.md",
+    "section": "### Task 3: Display proposals from retained customer models",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "proposals"
+  },
+  "126": {
+    "title": "Export and inspect frozen proposal files",
+    "parent": 49,
+    "children": [],
+    "deps": [
+      121,
+      123
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-proposals.md",
+    "section": "### Task 4: Export and inspect frozen proposal files",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "proposals"
+  },
+  "50": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Retain job and receipt evidence",
+    "parent": null,
+    "children": [
+      125,
+      128,
+      131
+    ],
+    "deps": [
+      40,
+      45
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-attachments.md",
+    "kind": "epic",
+    "key": "attachments"
+  },
+  "125": {
+    "title": "Store verified immutable attachment files",
+    "parent": 50,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-attachments.md",
+    "section": "### Task 1: Store verified immutable attachment files",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "attachments"
+  },
+  "128": {
+    "title": "Upload and download evidence through bounded routes",
+    "parent": 50,
+    "children": [],
+    "deps": [
+      125
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-attachments.md",
+    "section": "### Task 2: Upload and download evidence through bounded routes",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "attachments"
+  },
+  "131": {
+    "title": "Attach and reopen owner-selected evidence",
+    "parent": 50,
+    "children": [],
+    "deps": [
+      128
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-attachments.md",
+    "section": "### Task 3: Attach and reopen owner-selected evidence",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "attachments"
+  },
+  "51": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Create verified office backups",
+    "parent": null,
+    "children": [
+      127,
+      130,
+      133
+    ],
+    "deps": [
+      39,
+      50
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-capture.md",
+    "kind": "epic",
+    "key": "backup-capture"
+  },
+  "127": {
+    "title": "Define the complete current backup inventory",
+    "parent": 51,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-capture.md",
+    "section": "### Task 1: Define the complete current backup inventory",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "backup-capture"
+  },
+  "130": {
+    "title": "Capture a consistent database and file backup",
+    "parent": 51,
+    "children": [],
+    "deps": [
+      127
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-capture.md",
+    "section": "### Task 2: Capture a consistent database and file backup",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "backup-capture"
+  },
+  "133": {
+    "title": "Choose destinations and report verified backup status",
+    "parent": 51,
+    "children": [],
+    "deps": [
+      130
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-capture.md",
+    "section": "### Task 3: Choose destinations and report verified backup status",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "backup-capture"
+  },
+  "52": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Restore office work safely",
+    "parent": null,
+    "children": [
+      129,
+      132,
+      135
+    ],
+    "deps": [
+      51
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-restore.md",
+    "kind": "epic",
+    "key": "backup-restore"
+  },
+  "129": {
+    "title": "Validate every backup artifact before restore",
+    "parent": 52,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-restore.md",
+    "section": "### Task 1: Validate every backup artifact before restore",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "backup-restore"
+  },
+  "132": {
+    "title": "Restore through staging and preserve the old directory",
+    "parent": 52,
+    "children": [],
+    "deps": [
+      129
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-restore.md",
+    "section": "### Task 2: Restore through staging and preserve the old directory",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "backup-restore"
+  },
+  "135": {
+    "title": "Prove identity and evidence preservation after restore",
+    "parent": 52,
+    "children": [],
+    "deps": [
+      132
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-backup-restore.md",
+    "section": "### Task 3: Prove identity and evidence preservation after restore",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "backup-restore"
+  },
+  "53": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Prepare private field catalogs",
+    "parent": null,
+    "children": [
+      134,
+      137,
+      139,
+      142,
+      145
+    ],
+    "deps": [
+      49,
+      52
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+    "kind": "epic",
+    "key": "catalog-release"
+  },
+  "134": {
+    "title": "Encrypt independently versioned catalog modules",
+    "parent": 53,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+    "section": "### Task 1: Encrypt independently versioned catalog modules",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-release"
+  },
+  "137": {
+    "title": "Preserve published module and release identities",
+    "parent": 53,
+    "children": [],
+    "deps": [
+      134
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+    "section": "### Task 2: Preserve published module and release identities",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-release"
+  },
+  "139": {
+    "title": "Stage only verified public release artifacts",
+    "parent": 53,
+    "children": [],
+    "deps": [
+      134
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+    "section": "### Task 3: Stage only verified public release artifacts",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-release"
+  },
+  "142": {
+    "title": "Keep credentials local and generate enrollment explicitly",
+    "parent": 53,
+    "children": [],
+    "deps": [
+      134
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+    "section": "### Task 4: Keep credentials local and generate enrollment explicitly",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-release"
+  },
+  "145": {
+    "title": "Preview the release and selected current-pack removal",
+    "parent": 53,
+    "children": [],
+    "deps": [
+      137,
+      139,
+      142
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-release.md",
+    "section": "### Task 5: Preview the release and selected current-pack removal",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-release"
+  },
+  "54": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Save field site visits",
+    "parent": null,
+    "children": [
+      136,
+      140,
+      143,
+      146,
+      150,
+      152
+    ],
+    "deps": [
+      46,
+      49,
+      55
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "kind": "epic",
+    "key": "field-visits"
+  },
+  "136": {
+    "title": "Persist real field draft snapshots independently of keys",
+    "parent": 54,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "section": "### Task 1: Persist real field draft snapshots independently of keys",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-visits"
+  },
+  "140": {
+    "title": "Edit field customer job and run inputs",
+    "parent": 54,
+    "children": [],
+    "deps": [
+      136
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "section": "### Task 2: Edit field customer job and run inputs",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "field-visits"
+  },
+  "143": {
+    "title": "Calculate enrolled field work with exact Mac parity",
+    "parent": 54,
+    "children": [],
+    "deps": [
+      140
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "section": "### Task 3: Calculate enrolled field work with exact Mac parity",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-visits"
+  },
+  "146": {
+    "title": "Preserve newer field edits in the write queue",
+    "parent": 54,
+    "children": [],
+    "deps": [
+      136
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "section": "### Task 4: Preserve newer field edits in the write queue",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-visits"
+  },
+  "150": {
+    "title": "Report field save failure and flush before navigation",
+    "parent": 54,
+    "children": [],
+    "deps": [
+      140,
+      143,
+      146
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "section": "### Task 5: Report field save failure and flush before navigation",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-visits"
+  },
+  "152": {
+    "title": "Reopen field visits and report actual storage persistence",
+    "parent": 54,
+    "children": [],
+    "deps": [
+      150
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-visits.md",
+    "section": "### Task 6: Reopen field visits and report actual storage persistence",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "field-visits"
+  },
+  "55": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Register a device and install its first catalog",
+    "parent": null,
+    "children": [
+      138,
+      141,
+      144,
+      147,
+      148,
+      151,
+      155
+    ],
+    "deps": [
+      37,
+      53
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "kind": "epic",
+    "key": "registration"
+  },
+  "138": {
+    "title": "Validate enrollment without replacing active registration",
+    "parent": 55,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 1: Validate enrollment without replacing active registration",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "registration"
+  },
+  "141": {
+    "title": "Commit registration and catalog activation atomically",
+    "parent": 55,
+    "children": [],
+    "deps": [
+      138
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 2: Commit registration and catalog activation atomically",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "registration"
+  },
+  "144": {
+    "title": "Validate and decrypt complete catalog modules before install",
+    "parent": 55,
+    "children": [],
+    "deps": [
+      141
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 3: Validate and decrypt complete catalog modules before install",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "registration"
+  },
+  "147": {
+    "title": "Read camera and selected-image QR credentials",
+    "parent": 55,
+    "children": [],
+    "deps": [
+      138
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 4: Read camera and selected-image QR credentials",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "registration"
+  },
+  "148": {
+    "title": "Recover enrollment input after denied camera permission",
+    "parent": 55,
+    "children": [],
+    "deps": [
+      147
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 5: Recover enrollment input after denied camera permission",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "registration"
+  },
+  "151": {
+    "title": "Display catalog design and activation status",
+    "parent": 55,
+    "children": [],
+    "deps": [
+      144
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 6: Display catalog design and activation status",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "registration"
+  },
+  "155": {
+    "title": "Expose the read-only field conformance action",
+    "parent": 55,
+    "children": [],
+    "deps": [
+      151
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-registration.md",
+    "section": "### Task 7: Expose the read-only field conformance action",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "registration"
+  },
+  "56": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Refresh catalogs and rotate keys safely",
+    "parent": null,
+    "children": [
+      149,
+      153,
+      156,
+      159
+    ],
+    "deps": [
+      55
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-refresh.md",
+    "kind": "epic",
+    "key": "catalog-refresh"
+  },
+  "149": {
+    "title": "Reuse unchanged modules and retain active data on failure",
+    "parent": 56,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-refresh.md",
+    "section": "### Task 1: Reuse unchanged modules and retain active data on failure",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-refresh"
+  },
+  "153": {
+    "title": "Promote a pending key only with a valid matching release",
+    "parent": 56,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-refresh.md",
+    "section": "### Task 2: Promote a pending key only with a valid matching release",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-refresh"
+  },
+  "156": {
+    "title": "Schedule single-flight foreground catalog checks",
+    "parent": 56,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-refresh.md",
+    "section": "### Task 3: Schedule single-flight foreground catalog checks",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-refresh"
+  },
+  "159": {
+    "title": "Explain refresh and registration status accurately",
+    "parent": 56,
+    "children": [],
+    "deps": [
+      149,
+      153,
+      156
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-catalog-refresh.md",
+    "section": "### Task 4: Explain refresh and registration status accurately",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "catalog-refresh"
+  },
+  "57": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Present retained field quotes",
+    "parent": null,
+    "children": [
+      154,
+      157,
+      162,
+      165
+    ],
+    "deps": [
+      49,
+      54,
+      55
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-quotes.md",
+    "kind": "epic",
+    "key": "field-quotes"
+  },
+  "154": {
+    "title": "Enter field allowances and selling adjustments",
+    "parent": 57,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-quotes.md",
+    "section": "### Task 1: Enter field allowances and selling adjustments",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-quotes"
+  },
+  "157": {
+    "title": "Freeze durable Preliminary field snapshots",
+    "parent": 57,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-quotes.md",
+    "section": "### Task 2: Freeze durable Preliminary field snapshots",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-quotes"
+  },
+  "162": {
+    "title": "Export the shared customer-safe field PDF",
+    "parent": 57,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-quotes.md",
+    "section": "### Task 3: Export the shared customer-safe field PDF",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-quotes"
+  },
+  "165": {
+    "title": "Present retained quotes after explicit repricing",
+    "parent": 57,
+    "children": [],
+    "deps": [
+      154,
+      157,
+      162
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-quotes.md",
+    "section": "### Task 4: Present retained quotes after explicit repricing",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "field-quotes"
+  },
+  "58": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Return immutable field submissions",
+    "parent": null,
+    "children": [
+      158,
+      161,
+      164,
+      168
+    ],
+    "deps": [
+      57
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-returns.md",
+    "kind": "epic",
+    "key": "field-returns"
+  },
+  "158": {
+    "title": "Build strict self-contained field packages",
+    "parent": 58,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-returns.md",
+    "section": "### Task 1: Build strict self-contained field packages",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-returns"
+  },
+  "161": {
+    "title": "Persist immutable outbox records before sharing",
+    "parent": 58,
+    "children": [],
+    "deps": [
+      158
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-returns.md",
+    "section": "### Task 2: Persist immutable outbox records before sharing",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-returns"
+  },
+  "164": {
+    "title": "Share JSON or download it truthfully",
+    "parent": 58,
+    "children": [],
+    "deps": [
+      158
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-returns.md",
+    "section": "### Task 3: Share JSON or download it truthfully",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-returns"
+  },
+  "168": {
+    "title": "Retry saved submissions and confirm receipt explicitly",
+    "parent": 58,
+    "children": [],
+    "deps": [
+      161,
+      164
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-returns.md",
+    "section": "### Task 4: Retry saved submissions and confirm receipt explicitly",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "field-returns"
+  },
+  "59": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Review returned field work in the office",
+    "parent": null,
+    "children": [
+      160,
+      163,
+      166,
+      169
+    ],
+    "deps": [
+      45,
+      58
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-review.md",
+    "kind": "epic",
+    "key": "import-review"
+  },
+  "160": {
+    "title": "Validate received attachments before review",
+    "parent": 59,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-review.md",
+    "section": "### Task 1: Validate received attachments before review",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "import-review"
+  },
+  "163": {
+    "title": "Read existing source mappings without name-based merging",
+    "parent": 59,
+    "children": [],
+    "deps": [
+      160
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-review.md",
+    "section": "### Task 2: Read existing source mappings without name-based merging",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "import-review"
+  },
+  "166": {
+    "title": "Explain identity and base-revision conflicts",
+    "parent": 59,
+    "children": [],
+    "deps": [
+      160
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-review.md",
+    "section": "### Task 3: Explain identity and base-revision conflicts",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "import-review"
+  },
+  "169": {
+    "title": "Review source values and office target choices",
+    "parent": 59,
+    "children": [],
+    "deps": [
+      163,
+      166
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-review.md",
+    "section": "### Task 4: Review source values and office target choices",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "import-review"
+  },
+  "60": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Accept reviewed field submissions exactly once",
+    "parent": null,
+    "children": [
+      167,
+      171,
+      174,
+      176
+    ],
+    "deps": [
+      59
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-accept.md",
+    "kind": "epic",
+    "key": "import-accept"
+  },
+  "167": {
+    "title": "Commit import receipts and mappings together",
+    "parent": 60,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-accept.md",
+    "section": "### Task 1: Commit import receipts and mappings together",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "import-accept"
+  },
+  "171": {
+    "title": "Apply reviewed drafts while retaining original quote links",
+    "parent": 60,
+    "children": [],
+    "deps": [
+      167
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-accept.md",
+    "section": "### Task 2: Apply reviewed drafts while retaining original quote links",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "import-accept"
+  },
+  "174": {
+    "title": "Require renewed review after context changes",
+    "parent": 60,
+    "children": [],
+    "deps": [
+      167
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-accept.md",
+    "section": "### Task 3: Require renewed review after context changes",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "import-accept"
+  },
+  "176": {
+    "title": "Accept replayed and delayed submissions through the office UI",
+    "parent": 60,
+    "children": [],
+    "deps": [
+      171,
+      174
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-import-accept.md",
+    "section": "### Task 4: Accept replayed and delayed submissions through the office UI",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "import-accept"
+  },
+  "61": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Recover catalog and imported office evidence",
+    "parent": null,
+    "children": [
+      170,
+      173,
+      177
+    ],
+    "deps": [
+      52,
+      53,
+      60
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-office-recovery.md",
+    "kind": "epic",
+    "key": "office-recovery"
+  },
+  "170": {
+    "title": "Verify current archive and key backup coverage",
+    "parent": 61,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-office-recovery.md",
+    "section": "### Task 1: Verify current archive and key backup coverage",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "office-recovery"
+  },
+  "173": {
+    "title": "Restore import mappings links and duplicate receipts",
+    "parent": 61,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-office-recovery.md",
+    "section": "### Task 2: Restore import mappings links and duplicate receipts",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "office-recovery"
+  },
+  "177": {
+    "title": "Verify the complete current office restore",
+    "parent": 61,
+    "children": [],
+    "deps": [
+      170,
+      173
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-office-recovery.md",
+    "section": "### Task 3: Verify the complete current office restore",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "office-recovery"
+  },
+  "62": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Launch the field application without network",
+    "parent": null,
+    "children": [
+      172,
+      175,
+      179,
+      181
+    ],
+    "deps": [
+      55,
+      57,
+      58
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-offline-shell.md",
+    "kind": "epic",
+    "key": "offline-shell"
+  },
+  "172": {
+    "title": "Generate exact versioned app-shell asset metadata",
+    "parent": 62,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-offline-shell.md",
+    "section": "### Task 1: Generate exact versioned app-shell asset metadata",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "offline-shell"
+  },
+  "175": {
+    "title": "Cache only the versioned application shell",
+    "parent": 62,
+    "children": [],
+    "deps": [
+      172
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-offline-shell.md",
+    "section": "### Task 2: Cache only the versioned application shell",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "offline-shell"
+  },
+  "179": {
+    "title": "Register the production worker without reloading edits",
+    "parent": 62,
+    "children": [],
+    "deps": [
+      175
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-offline-shell.md",
+    "section": "### Task 3: Register the production worker without reloading edits",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "offline-shell"
+  },
+  "181": {
+    "title": "Cold-open retained work and PDF output offline",
+    "parent": 62,
+    "children": [],
+    "deps": [
+      179
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-offline-shell.md",
+    "section": "### Task 4: Cold-open retained work and PDF output offline",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "offline-shell"
+  },
+  "63": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Upgrade the field app without losing work",
+    "parent": null,
+    "children": [
+      178,
+      182,
+      185,
+      189
+    ],
+    "deps": [
+      56,
+      58,
+      62
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-app-upgrades.md",
+    "kind": "epic",
+    "key": "app-upgrades"
+  },
+  "178": {
+    "title": "Check waiting-release and stored-data compatibility",
+    "parent": 63,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-app-upgrades.md",
+    "section": "### Task 1: Check waiting-release and stored-data compatibility",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "app-upgrades"
+  },
+  "182": {
+    "title": "Defer activation until edits are durably saved",
+    "parent": 63,
+    "children": [],
+    "deps": [
+      178
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-app-upgrades.md",
+    "section": "### Task 2: Defer activation until edits are durably saved",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "app-upgrades"
+  },
+  "185": {
+    "title": "Keep the prior shell until replacement boot succeeds",
+    "parent": 63,
+    "children": [],
+    "deps": [
+      178
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-app-upgrades.md",
+    "section": "### Task 3: Keep the prior shell until replacement boot succeeds",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "app-upgrades"
+  },
+  "189": {
+    "title": "Rehearse genuinely different preserved-store releases",
+    "parent": 63,
+    "children": [],
+    "deps": [
+      182,
+      185
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-app-upgrades.md",
+    "section": "### Task 4: Rehearse genuinely different preserved-store releases",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "app-upgrades"
+  },
+  "65": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Recover field work after storage loss",
+    "parent": null,
+    "children": [
+      180,
+      183,
+      186,
+      188
+    ],
+    "deps": [
+      58
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-recovery.md",
+    "kind": "epic",
+    "key": "field-recovery"
+  },
+  "180": {
+    "title": "Export self-contained work without catalog credentials",
+    "parent": 65,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-recovery.md",
+    "section": "### Task 1: Export self-contained work without catalog credentials",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-recovery"
+  },
+  "183": {
+    "title": "Preview recovery identity conflicts without writes",
+    "parent": 65,
+    "children": [],
+    "deps": [
+      180
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-recovery.md",
+    "section": "### Task 2: Preview recovery identity conflicts without writes",
+    "hours": 3,
+    "size": "S",
+    "kind": "code",
+    "key": "field-recovery"
+  },
+  "186": {
+    "title": "Restore reviewed rows in one rechecked transaction",
+    "parent": 65,
+    "children": [],
+    "deps": [
+      180
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-recovery.md",
+    "section": "### Task 3: Restore reviewed rows in one rechecked transaction",
+    "hours": 4,
+    "size": "S",
+    "kind": "code",
+    "key": "field-recovery"
+  },
+  "188": {
+    "title": "Recover into a separate profile and reenroll explicitly",
+    "parent": 65,
+    "children": [],
+    "deps": [
+      183,
+      186
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-field-recovery.md",
+    "section": "### Task 4: Recover into a separate profile and reenroll explicitly",
+    "hours": 2,
+    "size": "XS",
+    "kind": "code",
+    "key": "field-recovery"
+  },
+  "64": {
+    "title": "\ud83e\uddd1\u200d\ud83e\uddd2\u200d\ud83e\uddd2 [Epic] Qualify the complete owner trial",
+    "parent": null,
+    "children": [
+      184,
+      187,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200
+    ],
+    "deps": [
+      56,
+      61,
+      63,
+      65
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "kind": "epic",
+    "key": "qualification"
+  },
+  "184": {
+    "title": "Prepare exact-release conformance inputs and records",
+    "parent": 64,
+    "children": [],
+    "deps": [],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 1: Prepare exact-release conformance inputs and records",
+    "hours": 2,
+    "size": "XS",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "187": {
+    "title": "Verify iPhone offline calculations and customer output",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      184
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 2: Verify iPhone offline calculations and customer output",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "190": {
+    "title": "Verify iPad offline calculations and customer output",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      184
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 3: Verify iPad offline calculations and customer output",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "191": {
+    "title": "Verify real Mac quote history and explicit repricing",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      184
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 4: Verify real Mac quote history and explicit repricing",
+    "hours": 2,
+    "size": "XS",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "192": {
+    "title": "Verify iPhone enrollment and key rotation",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      187,
+      190
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 5: Verify iPhone enrollment and key rotation",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "193": {
+    "title": "Verify iPad enrollment and key rotation",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      192
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 6: Verify iPad enrollment and key rotation",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "194": {
+    "title": "Verify iPhone dirty clean and offline app upgrades",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      193
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 7: Verify iPhone dirty clean and offline app upgrades",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "195": {
+    "title": "Verify iPad dirty clean and offline app upgrades",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      194
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 8: Verify iPad dirty clean and offline app upgrades",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "196": {
+    "title": "Verify actual iPhone sharing and reviewed office return",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      195
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 9: Verify actual iPhone sharing and reviewed office return",
+    "hours": 2,
+    "size": "XS",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "197": {
+    "title": "Verify actual iPad sharing and reviewed office return",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      196
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 10: Verify actual iPad sharing and reviewed office return",
+    "hours": 2,
+    "size": "XS",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "198": {
+    "title": "Verify isolated Mac restore and delayed plaintext import",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      191,
+      197
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 11: Verify isolated Mac restore and delayed plaintext import",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "199": {
+    "title": "Verify field recovery in separate test profiles",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      198
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 12: Verify field recovery in separate test profiles",
+    "hours": 3,
+    "size": "S",
+    "kind": "docs-only",
+    "key": "qualification"
+  },
+  "200": {
+    "title": "Reconcile the eleven-case acceptance ledger",
+    "parent": 64,
+    "children": [],
+    "deps": [
+      187,
+      190,
+      191,
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ],
+    "plan": "docs/superpowers/plans/sibling-delivery/2026-11-01-qualification.md",
+    "section": "### Task 13: Reconcile the eleven-case acceptance ledger",
+    "hours": 2,
+    "size": "XS",
+    "kind": "docs-only",
+    "key": "qualification"
+  }
+}
